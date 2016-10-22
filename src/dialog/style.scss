@@ -1,0 +1,18 @@
+@import '../../../src/modal/style.scss';
+
+.modal.alert-dialog {
+    z-index: 100001;
+
+    // .modal-overlay {
+    //     background: transparent;
+    // }
+}
+
+
+.modal.confirm-dialog {
+    z-index: 100000;
+    
+    // .modal-overlay {
+    //     background: transparent;
+    // }
+}

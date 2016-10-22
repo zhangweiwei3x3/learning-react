@@ -1,0 +1,14 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+.image-lazy-load {
+    width: 400px;
+    height: 300px;
+    border: 1px solid;
+    overflow: auto;
+}
+img {
+    display: block;
+    margin: 20px;
+}
