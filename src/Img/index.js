@@ -17,27 +17,30 @@ export default class Img extends Component {
     }
 
     componentDidMount() {
-        const {lazy, isLoad} = this.props;
+        const {isLazy, hasLoaded, scale} = this.props;
+        const scaleXY = scale.split(':');
 
-        if (!isLoad && lazy) {
+        if (!hasLoaded && isLazy) {
             this.loadImg();
         }
+
+        this.refs.img.style.height = parseFloat(Utils.getStyle(this.refs.img, 'width')) * scaleXY[1] / scaleXY[0] + 'px';
     }
 
     componentWillReceiveProps(nextProps) {
-        const {lazy, isLoad} = this.props;
+        const {isLazy, hasLoaded} = this.props;
 
-        if (!isLoad && nextProps.lazy && !lazy) {
+        if (!hasLoaded && nextProps.isLazy) {
             this.loadImg();
         }
     }
 
     render() {
-        const {className, lazy, src, deafultImg, deafultImgName, scale, type} = this.props;
+        const {className, isLazy, src, deafultImg, deafultImgName, scale, type} = this.props;
         let realClassName = `img${className ? ' ' + className : ''}`,
             currentSrc = src;
 
-        if (lazy) {
+        if (isLazy) {
             realClassName += ' img-load-before';
 
             if (deafultImg) {
@@ -60,8 +63,8 @@ export default class Img extends Component {
 Img.defaultProps = {
     type: 'jpg',
     scale: '16:9',
-    lazy: true,
-    isLoad: false
+    isLazy: true,
+    hasLoaded: false
 };
 if (process.env.NODE_ENV !== 'production') {
     Img.PropTypes = {
@@ -71,7 +74,7 @@ if (process.env.NODE_ENV !== 'production') {
         scale: PropTypes.string, // 图片比例
         deafultImg: PropTypes.string, // 上传的默认图片
         deafultImgName: PropTypes.string, // 本地的默认图片 例： default-16X9-deafultImgName.type
-        lazy: PropTypes.bool, // 是否懒加载
-        isLoad: PropTypes.bool // 是否不加载 src
+        isLazy: PropTypes.bool, // 是否懒加载
+        hasLoaded: PropTypes.bool // 是否已经加载完成
     };
 }

@@ -22,8 +22,8 @@ export class ImgLazyLoad extends Component {
 ImgLazyLoad.class = 'img-lazy-load-' + Math.random().toString(36).slice(2, 5);
 ImgLazyLoad.defaultProps = {
     scale: '16:9',
-    lazy: true,
-    isLoad: true
+    isLazy: true,
+    hasLoaded: true // ImgLazyLoadWrap 自己加载 img 不需要在Img 组件里加载
 };
 
 export class ImgLazyLoadWrap extends Component {
@@ -55,8 +55,6 @@ export class ImgLazyLoadWrap extends Component {
 
     lazyLoad() {
         if (this.imgs.length === 0) {
-            this.detachEvent();
-
             return;
         }
         let left = 0,
@@ -85,8 +83,12 @@ export class ImgLazyLoadWrap extends Component {
             this.target = window;
             this.width = window.innerHeight + offsetX;
             this.height = window.innerHeight + offsetY;
-        } else {
+        } else if (eventTarget === 'self') {
             this.target = this.refs.lazyLoadWrap;
+            this.width = parseFloat(Utils.getStyle(this.target, 'width')) + offsetX;
+            this.height = parseFloat(Utils.getStyle(this.target, 'height')) + offsetY;
+        } else {
+            this.target = this.refs.lazyLoadWrap.parentNode;
             this.width = parseFloat(Utils.getStyle(this.target, 'width')) + offsetX;
             this.height = parseFloat(Utils.getStyle(this.target, 'height')) + offsetY;
         }
@@ -112,6 +114,11 @@ export class ImgLazyLoadWrap extends Component {
         this.lazyLoad();
     }
 
+    componentDidUpdate() {
+        this.imgs = Array.from(this.refs.lazyLoadWrap.querySelectorAll('.' + ImgLazyLoad.class));
+        this.lazyLoad();
+    }
+
     componentWillUnmount() {
         this.detachEvent();
     }
@@ -132,7 +139,7 @@ ImgLazyLoadWrap.defaultProps = {
 if (process.env.NODE_ENV !== 'production') {
     ImgLazyLoadWrap.PropTypes = {
         eventType: PropTypes.oneOf(['scroll', 'touchmove']),
-        eventTarget: PropTypes.oneOf([window, 'self']),
+        eventTarget: PropTypes.oneOf([window, 'self', 'parent']),
         offsetX: PropTypes.number,
         offsetY: PropTypes.number
     }; 
