@@ -1,14 +1,21 @@
 /**
+ * 图片懒加载
+ * 
  * anchor: zww
- * time: 2016-10-14
+ * date: 2016-10-14
+ *
+ *  eventType:  监听事件类型（'scroll', 'touchmove'）
+ *  eventTarget: 滚动容器（window, 'self', 'parent'）
+ *  offsetX: 开始加载时的左边界值（string, number）
+ *  offsetY: 开始加载时的下边界值（string, number）
+ *  
  */
 
 'use strict';
 
 const {Component, PropTypes} = React;
 
-import Utils from '../libs/Utils';
-import throttle from '../libs/throttle';
+import {Util, throttle} from '../libs/Util';
 import Img from '../Img';
 
 export class ImgLazyLoad extends Component {
@@ -23,7 +30,7 @@ ImgLazyLoad.class = 'img-lazy-load-' + Math.random().toString(36).slice(2, 5);
 ImgLazyLoad.defaultProps = {
     scale: '16:9',
     isLazy: true,
-    hasLoaded: true // ImgLazyLoadWrap 自己加载 img 不需要在Img 组件里加载
+    initLoad: false // ImgLazyLoadWrap 自己加载 img 不需要在Img 组件里加载
 };
 
 export class ImgLazyLoadWrap extends Component {
@@ -45,7 +52,7 @@ export class ImgLazyLoadWrap extends Component {
     }
 
     loadImg(img) {
-        Utils.loadImg(img, img.dataset.src, () => {
+        Util.loadImg(img, img.dataset.src, () => {
             img.classList.remove(ImgLazyLoad.class);
             img.classList.remove('img-load-before');
 
@@ -70,14 +77,17 @@ export class ImgLazyLoadWrap extends Component {
         for (let i = 0; i < this.imgs.length; i++) {
             let img = this.imgs[i];
 
-            if (Utils.checkInRect(img, this.width, this.height, left, top)) {
+            if (Util.checkInRect(img, this.width, this.height, left, top)) {
                 this.loadImg(img);
             }
         }
     }
 
     init() {
-        const {eventTarget, offsetX, offsetY} = this.props;
+        let {eventTarget, offsetX, offsetY} = this.props;
+        
+        offsetX = +offsetX;
+        offsetY = +offsetY;
 
         if (eventTarget === window) {
             this.target = window;
@@ -85,12 +95,12 @@ export class ImgLazyLoadWrap extends Component {
             this.height = window.innerHeight + offsetY;
         } else if (eventTarget === 'self') {
             this.target = this.refs.lazyLoadWrap;
-            this.width = parseFloat(Utils.getStyle(this.target, 'width')) + offsetX;
-            this.height = parseFloat(Utils.getStyle(this.target, 'height')) + offsetY;
+            this.width = parseFloat(Util.getStyle(this.target, 'width')) + offsetX;
+            this.height = parseFloat(Util.getStyle(this.target, 'height')) + offsetY;
         } else {
             this.target = this.refs.lazyLoadWrap.parentNode;
-            this.width = parseFloat(Utils.getStyle(this.target, 'width')) + offsetX;
-            this.height = parseFloat(Utils.getStyle(this.target, 'height')) + offsetY;
+            this.width = parseFloat(Util.getStyle(this.target, 'width')) + offsetX;
+            this.height = parseFloat(Util.getStyle(this.target, 'height')) + offsetY;
         }
     }
 
@@ -138,9 +148,13 @@ ImgLazyLoadWrap.defaultProps = {
 };
 if (process.env.NODE_ENV !== 'production') {
     ImgLazyLoadWrap.PropTypes = {
+        // 监听事件类型
         eventType: PropTypes.oneOf(['scroll', 'touchmove']),
+        // 滚动容器
         eventTarget: PropTypes.oneOf([window, 'self', 'parent']),
-        offsetX: PropTypes.number,
-        offsetY: PropTypes.number
+        // 开始加载时的左边界值
+        offsetX: PropTypes.oneOf([PropTypes.number, PropTypes.string]),
+        // 开始加载时的下边界值
+        offsetY: PropTypes.oneOf([PropTypes.number, PropTypes.string])
     }; 
 }

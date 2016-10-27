@@ -1,6 +1,26 @@
 /**
+ * 模拟 alert confirm
+ * 
  * anchor: zww
- * time: 2016-10-08
+ * date: 2016-10-08
+ *
+ * openAlert
+ *     title: 提示标题（string）
+ *     dom: 提示内容（string || node）
+ *     isAnimate: 是否有动画（bool）
+ *     hasOverlayClick: 点击遮罩层是否关闭弹窗（bool）
+ *     hasCloseBtn: 标题处是否有关闭按钮（bool）
+ *     manualClose: 是否手动关闭弹窗（bool）
+ *     onOk: 点击确认按钮的回调函数（func）
+ *     
+ * openConfirm
+ *     title: 提示标题（string）
+ *     dom: 提示内容（string || node）
+ *     isAnimate: 是否有动画（bool）
+ *     hasOverlayClick: 点击遮罩层是否关闭弹窗（bool）
+ *     hasCloseBtn: 标题处是否有关闭按钮（bool）
+ *     onOk: 点击确认按钮的回调函数（func）
+ *     onCancel: 点击取消按钮的回调函数（func）
  */
 
 'use strict';
@@ -82,23 +102,38 @@ class Dialog extends Component {
 }
 
 Dialog.defaultProps = {
-    title: '提示',
-    type: 'alert',
-    isAnimate: false,
-    manualClose: false,
-    hasOverlayClick: false,
-    hasCloseBtn: false
+    title: '提示', // 提示标题
+    isAnimate: false, // 是否有动画
+    manualClose: false, // 是否手动关闭弹窗
+    hasOverlayClick: false, // 点击遮罩层是否关闭弹窗
+    hasCloseBtn: false // 标题处是否有关闭按钮
 };
 if (process.env.NODE_ENV !== 'production') {
     Dialog.PropTypes = {
+        // 提示标题
         type: PropTypes.oneOf(['alert', 'confirm']),
+        // 提示内容 string || node
         dom: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
-        manualClose: PropTypes.bool, // 手动关闭弹窗，只在 onOk 中使用
+        // 是否手动关闭弹窗
+        manualClose: PropTypes.bool,
+        // 点击确认按钮的回调函数
         onOk: PropTypes.func,
+        // 点击取消按钮的回调函数
         onCancel: PropTypes.func
     }; 
 }
 
+/**
+ * openAlert
+ *     title: 提示标题
+ *     dom: 提示内容 string || node
+ *     isAnimate: 是否有动画
+ *     hasOverlayClick: 点击遮罩层是否关闭弹窗
+ *     hasCloseBtn: 标题处是否有关闭按钮
+ *     manualClose: 是否手动关闭弹窗
+ *     onOk: 点击确认按钮的回调函数
+ * 
+ */
 // alert 只有一个
 var alertIsVisible = false;
 
@@ -130,6 +165,17 @@ export const openAlert = (option) => {
 openAlert.id = 'js-alert-dialog-' + Math.random().toString(36).slice(2, 5);
 
 
+/**
+ * openConfirm
+ *     title: 提示标题
+ *     dom: 提示内容 string || node
+ *     isAnimate: 是否有动画
+ *     hasOverlayClick: 点击遮罩层是否关闭弹窗
+ *     hasCloseBtn: 标题处是否有关闭按钮
+ *     onOk: 点击确认按钮的回调函数
+ *     onCancel: 点击取消按钮的回调函数
+ * 
+ */
 // confirm 只有一个
 var confirmIsVisible = false;
 

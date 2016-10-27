@@ -1,15 +1,23 @@
-/*
-  Anchor     : zww
-  CreateTime : 2016-09-01
-*/
+/**
+ * 拖拽排序
+ * 
+ * anchor: zww
+ * date: 2016-09-01
+ *
+ *   columns: 栏目（array）
+ *   data: 数据（array）
+ *   dragging: 是否正在拖拽（bool）
+ *   dragStart: 开始拖拽的回调函数 (func)
+ *   onChange: 拖拽结束的回调函数 (func)
+ *   
+ */
 'use strict';
+const {Component, PropTypes} = React;
 
 // thead th
 const renderThs = (columns) => {
     return columns.map((column, index) => {
-        return (
-            <th className={column.className} key={index}>{column.displayName}</th>
-        );
+        return <th className={column.className} key={index}>{column.displayName}</th>;
     });
 };
 
@@ -18,26 +26,24 @@ const renderTds = (row, columns) => {
     return columns.map((column, index) => {
         var customComponent = column.customComponent;
 
-        return (
-            !customComponent ? <td key={index}>{row[column.columnName]}</td> : <td key={index}>{column.customComponent(row)}</td>
-        );
+        return !customComponent
+            ? <td key={index}>{row[column.columnName]}</td>
+            : <td key={index}>{column.customComponent(row)}</td>;
     });
 };
 
 // tbody tr
 const renderRows = (data, columns) => {
     return data.map((row, index) => {
-        return (
-            <tr draggable={!row.disabled} className={row.disabled ? 'disabled' : null} key={index}>
-                {
-                    renderTds(row, columns)
-                }
-            </tr>
-        );
+        return <tr draggable={!row.disabled} className={row.disabled ? 'disabled' : null} key={index}>
+            {
+                renderTds(row, columns)
+            }
+        </tr>;
     });
 };
 
-export default class Drag extends React.Component {
+export default class Drag extends Component {
     constructor(...args) {
         super(...args);
 
@@ -45,6 +51,25 @@ export default class Drag extends React.Component {
         this.state = {
             data: []
         };
+    }
+
+    // 获取 tbody 下的 tr 元素
+    isDisabled(elem) {
+        const tableWrap = this.refs.tableWrap;
+
+        while (elem.nodeName !== 'TR') {
+            if (elem === tableWrap) {
+                return true;
+            }
+
+            elem = elem.parentNode;
+        }
+
+        if (elem.parentNode.nodeName === 'THEAD') {
+            return true;
+        }
+
+        return elem.getAttribute('draggable') !== 'true';
     }
 
     // 获取元素的位置 下标
@@ -57,7 +82,6 @@ export default class Drag extends React.Component {
                 index = elem.getElementsByTagName('tbody')[0].childElementCount;
                 break;
             }
-
             elem = elem.parentNode;
         }
 
@@ -73,7 +97,6 @@ export default class Drag extends React.Component {
                 count++;
                 elem = elem.nextElementSibling;
             }
-            
             index = size - count;
         }
 
@@ -114,6 +137,10 @@ export default class Drag extends React.Component {
     drop(e) {
         const {onChange, dragging} = this.props;
 
+        if (this.isDisabled(e.target)) {
+            return;
+        }
+
         if (dragging) {
             onChange && onChange(this.props.data, this.getIndex(e.target));
         } else {
@@ -147,25 +174,41 @@ export default class Drag extends React.Component {
         const columns = this.props.columns,
             data = this.state.data;
 
-        return (
-            <div ref="tableWrap" className="table" onDragStart={this.dragStart.bind(this)} onDragOver={this.dragover.bind(this)} onDrop={this.drop.bind(this)}>
-                <table className="table table-striped">
-                    {
-                        columns[0].displayName && (
-                            <thead>
-                                <tr>
-                                    {
-                                        renderThs(columns)
-                                    }
-                                </tr>
-                            </thead>
-                        )
-                    }
-                    <tbody>
-                        {renderRows(data, columns)}
-                    </tbody>
-                </table>
-            </div>
-        );
+        return <div ref="tableWrap" className="table" onDragStart={this.dragStart.bind(this)} onDragOver={this.dragover.bind(this)} onDrop={this.drop.bind(this)}>
+            <table className="table table-striped">
+                {
+                    columns[0].displayName && (
+                        <thead>
+                            <tr>
+                                {
+                                    renderThs(columns)
+                                }
+                            </tr>
+                        </thead>
+                    )
+                }
+                <tbody>
+                    {renderRows(data, columns)}
+                </tbody>
+            </table>
+        </div>;
     }
+}
+
+Drag.defaultProps = {
+    dragging: false // 是否正在拖拽
+};
+if (process.env.NODE_ENV !== 'production') {
+    Drag.PropTypes = {
+        // 栏目
+        columns: PropTypes.array,
+        // 数据
+        data: PropTypes.array,
+        // 是否正在拖拽
+        dragging: PropTypes.bool,
+        // 开始拖拽的回调函数
+        dragStart: PropTypes.func,
+        // 拖拽结束的回调函数
+        onChange: PropTypes.func
+    }; 
 }

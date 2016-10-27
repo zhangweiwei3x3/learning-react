@@ -1,36 +1,49 @@
 /**
+ * 图片组件
+ *     默认图片和图片加载
+ *     
  * anchor: zww
- * time: 2016-10-13
+ * date: 2016-10-13
+ *
+ *  className: class（string）
+ *  src: 图片 src（string）
+ *  type: 默认图片格式（string）
+ *  scale: 图片比例16:9（string）
+ *  deafultImg: 上传的默认图片（string）
+ *  deafultImgName: 本地的默认图片（string）
+ *  isLazy: 是否懒加载（bool）
+ *  initLoad: 初始化就加载图片（bool）
+ *
  */
 
 'use strict';
 
-import Utils from '../libs/Utils';
+import {Util} from '../libs/Util';
 
 const {Component, PropTypes} = React;
 
 export default class Img extends Component {
     loadImg() {
-        Utils.loadImg(this.refs.img, this.props.src, () => {
+        Util.loadImg(this.refs.img, this.props.src, () => {
             this.refs.img.classList.remove('img-load-before');
         });
     }
 
     componentDidMount() {
-        const {isLazy, hasLoaded, scale} = this.props;
+        const {isLazy, initLoad, scale} = this.props;
         const scaleXY = scale.split(':');
 
-        if (!hasLoaded && isLazy) {
+        if (initLoad && isLazy) {
             this.loadImg();
         }
 
-        this.refs.img.style.height = parseFloat(Utils.getStyle(this.refs.img, 'width')) * scaleXY[1] / scaleXY[0] + 'px';
+        this.refs.img.style.height = parseFloat(Util.getStyle(this.refs.img, 'width')) * scaleXY[1] / scaleXY[0] + 'px';
     }
 
     componentWillReceiveProps(nextProps) {
-        const {isLazy, hasLoaded} = this.props;
+        const {isLazy, initLoad} = nextProps;
 
-        if (!hasLoaded && nextProps.isLazy) {
+        if (initLoad && isLazy) {
             this.loadImg();
         }
     }
@@ -61,20 +74,27 @@ export default class Img extends Component {
 }
 
 Img.defaultProps = {
-    type: 'jpg',
-    scale: '16:9',
-    isLazy: true,
-    hasLoaded: false
+    type: 'jpg', // 默认图片格式
+    scale: '16:9', // 图片比例
+    isLazy: true, // 是否懒加载
+    initLoad: true // 初始化就加载图片
 };
 if (process.env.NODE_ENV !== 'production') {
     Img.PropTypes = {
         className: PropTypes.string,
+        // 图片 src
         src: PropTypes.string.isRequired,
-        type: PropTypes.string, // 默认图片格式
-        scale: PropTypes.string, // 图片比例
-        deafultImg: PropTypes.string, // 上传的默认图片
-        deafultImgName: PropTypes.string, // 本地的默认图片 例： default-16X9-deafultImgName.type
-        isLazy: PropTypes.bool, // 是否懒加载
-        hasLoaded: PropTypes.bool // 是否已经加载完成
+        // 默认图片格式
+        type: PropTypes.string,
+        // 图片比例
+        scale: PropTypes.string,
+        // 上传的默认图片
+        deafultImg: PropTypes.string,
+        // 本地的默认图片 例： default-16X9-deafultImgName.type
+        deafultImgName: PropTypes.string,
+        // 是否懒加载
+        isLazy: PropTypes.bool,
+        // 初始化就加载图片
+        initLoad: PropTypes.bool
     };
 }

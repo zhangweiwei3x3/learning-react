@@ -1,14 +1,27 @@
 /**
+ * 模态框
+ * 
  * anchor: zww
- * time: 2016-10-08
+ * date: 2016-10-08
+ * 
+ *  isMobile： 是否是手机（bool）
+ *  title: 标题（string）
+ *  className: class（string）
+ *  isAnimate: 是否有动画（bool）
+ *  hasOverlayClick: 点击遮罩层是否关闭弹窗（bool）
+ *  hasEscape: 按esc按键是否关闭（bool）
+ *  btns: 底部的按钮（array）
+ *  visiable: 弹窗是否显示（bool）
+ *  hasCloseBtn: 标题是否有关闭按钮（bool）
+ *  closeCallback: 弹窗关闭后的回调（func）
+ *  onCancel: 点击确认按钮的回调（func）
  */
 
 'use strict';
 
 const {Component, PropTypes} = React;
 
-import Utils from '../libs/Utils';
-import throttle from '../libs/throttle';
+import {Util, throttle} from '../libs/Util';
 
 class Modal extends Component {
     constructor(...args) {
@@ -17,7 +30,7 @@ class Modal extends Component {
         this.isFirst = true; // 第一次显示时再渲染
         this.transitionEnd = this.transitionEnd.bind(this);
 
-        this.isMobile = typeof this.props.isMobile !== 'undefined' ? this.props.isMobile : Utils.isMobile();
+        this.isMobile = typeof this.props.isMobile !== 'undefined' ? this.props.isMobile : Util.isMobile();
         if (!this.isMobile) {
             this.isFirstShow = true; // 第一是显示，需要调整对话框的top值
 
@@ -28,7 +41,7 @@ class Modal extends Component {
 
     adjustDialog() {
         let winHeight = window.innerHeight,
-            dialogHeight = parseFloat(Utils.getStyle(this.refs.modalDialog, 'height'));
+            dialogHeight = parseFloat(Util.getStyle(this.refs.modalDialog, 'height'));
 
         if (dialogHeight < winHeight) {
             this.refs.modalDialog.style.top = `-${(winHeight - dialogHeight) / 6}px`;
@@ -128,7 +141,7 @@ class Modal extends Component {
         this.renderInit();
 
         if (isAnimate) {
-            this.refs.modalDialog.addEventListener(Utils.getTransitionEndEvent(), this.transitionEnd, false);
+            this.refs.modalDialog.addEventListener(Util.getTransitionEndEvent(), this.transitionEnd, false);
         }
 
         if (!this.isMobile) {
@@ -148,7 +161,7 @@ class Modal extends Component {
         const {hasEscape, isAnimate} = this.props;
 
         if (isAnimate) {
-            this.refs.modalDialog.removeEventListener(Utils.getTransitionEndEvent(), this.transitionEnd, false);
+            this.refs.modalDialog.removeEventListener(Util.getTransitionEndEvent(), this.transitionEnd, false);
         }
 
         if (!this.isMobile) {
@@ -161,7 +174,7 @@ class Modal extends Component {
     }
 
     render() {
-        const {title, children, btns, id, className, visiable, isAnimate} = this.props;
+        const {title, children, btns, className, visiable, isAnimate} = this.props;
         let modalClassName = `modal${className ? ' ' + className : ''}`;
 
         if (isAnimate) {
@@ -176,7 +189,7 @@ class Modal extends Component {
             modalClassName += visiable ? ' show' : '';
         }
 
-        return (visiable || !this.isFirst || isAnimate) && <div id={id} ref="modal" className={modalClassName}>
+        return (visiable || !this.isFirst || isAnimate) && <div ref="modal" className={modalClassName}>
             <div className="modal-overlay" onClick={this.overlay.bind(this)}></div>
             <div ref="modalDialog" className="modal-dialog">
                 {
@@ -200,22 +213,32 @@ Modal.defaultProps = {
     isMobile: false,
     isAnimate: false,
     hasEscape: false,
-    hasOverlayClick: true,
-    hasCloseBtn: true
+    hasOverlayClick: true, 
+    hasCloseBtn: true 
 };
 if (process.env.NODE_ENV !== 'production') {
     Modal.PropTypes = {
+        // 是否是手机
         isMobile: PropTypes.bool,
+        // 标题
         title: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
-        id: PropTypes.string,
+        // class
         className: PropTypes.string,
+        // 是否有动画
         isAnimate: PropTypes.bool,
+        // 点击遮罩层是否关闭弹窗
         hasOverlayClick: PropTypes.bool,
+        // 按esc按键是否关闭
         hasEscape: PropTypes.bool,
+        // 底部的按钮
         btns: PropTypes.array,
+        // 弹窗是否显示
         visiable: PropTypes.bool,
+        // 标题是否有关闭按钮
         hasCloseBtn: PropTypes.bool,
-        closeCallback: PropTypes.func, // 弹窗关闭后的回调
+        // 弹窗关闭后的回调
+        closeCallback: PropTypes.func, 
+        // 点击确认按钮的回调
         onCancel: PropTypes.func.isRequired
     }; 
 }

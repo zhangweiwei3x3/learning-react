@@ -1,20 +1,26 @@
 /**
+ * 头条 向上滚动 (待完善)
+ * 
  * anchor: zww
- * time: 2016-10-11
+ * date: 2016-10-11
+ *
+ * scrollTime: 滚动一条记录的时间（number string）
+ * scrolldelay: 滚动一条记录后的暂停时间 string）
+ *
  */
 
 'use strict';
 
 const {Component, PropTypes} = React;
 
-import Utils from '../libs/Utils';
+import {Util} from '../libs/Util';
 
 class Marquee extends Component {
     constructor(...args) {
         super(...args);
 
-        this.transform = Utils.vendorPropName('transform');
-        this.transition = Utils.vendorPropName('transition');
+        this.transform = Util.vendorPropName('transform');
+        this.transition = Util.vendorPropName('transition');
         this.index = 0;
         this.opacity = 0;
         this.timer = null;
@@ -62,19 +68,19 @@ class Marquee extends Component {
         const {children, scrolldelay} = this.props;
         let marqueeItems = this.refs.marqueeContent.children;
         
-        this.scrollDistance = parseFloat(Utils.getStyle(this.refs.marquee, 'height'));
+        this.scrollDistance = parseFloat(Util.getStyle(this.refs.marquee, 'height'));
         this.size = children.length * 2;
 
         for (let i = marqueeItems.length; i--;) {
             marqueeItems[i].style.marginBottom = this.scrollDistance + 'px';
         }
 
-        this.refs.marqueeContent.addEventListener(Utils.getTransitionEndEvent(), this.transitionEnd, false);
+        this.refs.marqueeContent.addEventListener(Util.getTransitionEndEvent(), this.transitionEnd, false);
         this.timer = setTimeout(this.scroll.bind(this), scrolldelay);
     }
 
     omponentWillUnmount() {
-        this.refs.marqueeContent.removeEventListener(Utils.getTransitionEndEvent(), this.transitionEnd, false);
+        this.refs.marqueeContent.removeEventListener(Util.getTransitionEndEvent(), this.transitionEnd, false);
     }
 
     render() {
@@ -100,8 +106,10 @@ Marquee.defaultProps = {
 };
 if (process.env.NODE_ENV !== 'production') {
     Marquee.PropTypes = {
-        scrollTime: PropTypes.number,
-        scrolldelay: PropTypes.number
+        // 滚动一条记录的时间
+        scrollTime: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+        // 滚动一条记录后的暂停时间
+        scrolldelay: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
     }; 
 }
 
