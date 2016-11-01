@@ -20,16 +20,14 @@ import Img from '../Img';
 
 export class ImgLazyLoad extends Component {
     render() {
-        const {className, src} = this.props;
+        const {className, src, type, scale, deafultImg, deafultImgName, isLazy, initLoad} = this.props;
 
-        return <Img {...this.props} data-src={src} className={ImgLazyLoad.class + (className ? ' ' + className : '')} />;
+        return <Img src={src} type={type} scale={scale} deafultImg={deafultImg} deafultImgName={deafultImgName} isLazy={isLazy} initLoad={initLoad} data-src={src} className={(!initLoad ? ImgLazyLoad.class : '') + (className ? ' ' + className : '')} />;
     }
 }
-
 ImgLazyLoad.class = 'img-lazy-load-' + Math.random().toString(36).slice(2, 5);
+// 属性说明见 Img 组件
 ImgLazyLoad.defaultProps = {
-    scale: '16:9',
-    isLazy: true,
     initLoad: false // ImgLazyLoadWrap 自己加载 img 不需要在Img 组件里加载
 };
 

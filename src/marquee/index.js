@@ -22,78 +22,97 @@ class Marquee extends Component {
         this.transform = Util.vendorPropName('transform');
         this.transition = Util.vendorPropName('transition');
         this.index = 0;
-        this.opacity = 0;
         this.timer = null;
 
         this.transitionEnd = this.transitionEnd.bind(this);
     }
 
-    scroll() {
+    autoPlay() {
         const {scrollTime} = this.props;
 
         this.index++;
-        if (this.index >= this.size) {
-            this.animate(0, this.scrollDistance);
-            this.index = 0;
-
-            setTimeout(() => {
-                this.animate(scrollTime, 0);
-            });
-        } else {
-            this.animate(scrollTime, -1 * this.scrollDistance * this.index);
-        }
+        this.scroll(scrollTime, -1 * this.scrollDistance * this.index);
     }
 
-    animate(scrollTime, scrollDistance) {
+    scroll(scrollTime, scrollDistance) {
         this.refs.marqueeContent.style[this.transition] = scrollTime + 'ms';
-        this.refs.marqueeContent.style[this.transform] = `translateY(${scrollDistance}px)`;
-        this.refs.marqueeContent.style.opacity = this.opacity;
+        this.refs.marqueeContent.style[this.transform] = `translate3d(0px, ${scrollDistance}px, 0px)`;
     }
 
     // transition 动画结束后事件
     transitionEnd() {
-        if (this.index % 2 === 0) {
-            clearTimeout(this.timer);
-            this.timer = setTimeout(() => {
-                this.opacity = this.opacity ? 0 : 1;
-                this.scroll();
-            }, this.props.scrolldelay);
-        } else {
-            this.opacity = this.opacity ? 0 : 1;
-            this.scroll();
+        if (this.index >= this.size) {
+            this.index = 0;
+
+            this.scroll(0, 0);
         }
+
+        this.timer = setTimeout(this.autoPlay.bind(this), this.props.scrolldelay);
     }
 
-    componentDidMount() {
+    init() {
         const {children, scrolldelay} = this.props;
-        let marqueeItems = this.refs.marqueeContent.children;
-        
-        this.scrollDistance = parseFloat(Util.getStyle(this.refs.marquee, 'height'));
-        this.size = children.length * 2;
 
-        for (let i = marqueeItems.length; i--;) {
-            marqueeItems[i].style.marginBottom = this.scrollDistance + 'px';
+        if (this.timer) {
+            clearTimeout(this.timer);
+            this.detachTransition();
+            this.refs.marqueeContent.style = '';
         }
 
-        this.refs.marqueeContent.addEventListener(Util.getTransitionEndEvent(), this.transitionEnd, false);
-        this.timer = setTimeout(this.scroll.bind(this), scrolldelay);
+        if (!children || !children.length || children.length < 2) {
+            return;
+        }
+
+        this.size = children.length;
+        this.attachTransition();
+        this.timer = setTimeout(this.autoPlay.bind(this), scrolldelay);
     }
 
-    omponentWillUnmount() {
+    _renderChild() {
+        const {children} = this.props;
+
+        if (!children) {
+            return null;
+        }
+
+        if (children.length > 1) {
+            return children.concat(children[0]).map((item, index) => {
+                return <div className="marquee-item" key={index}>
+                    {item}
+                </div>;
+            });
+        }
+
+        return children;
+    }
+
+    attachTransition() {
+        this.refs.marqueeContent.addEventListener(Util.getTransitionEndEvent(), this.transitionEnd, false);
+    }
+
+    detachTransition() {
         this.refs.marqueeContent.removeEventListener(Util.getTransitionEndEvent(), this.transitionEnd, false);
     }
 
-    render() {
-        const {children} = this.props;
+    componentDidMount() {
+        this.scrollDistance = parseFloat(Util.getStyle(this.refs.marquee, 'height'));
 
+        this.init();
+    }
+
+    componentDidUpdate() {
+        this.init();
+    }
+
+    omponentWillUnmount() {
+        this.timer && this.detachTransition();
+    }
+
+    render() {
         return <div ref="marquee" className="marquee">
             <div ref="marqueeContent" className="marquee-content">
                 {
-                    children.map((item, index) => {
-                        return <div className="marquee-item" key={index}>
-                            {item}
-                        </div>;
-                    })
+                    this._renderChild()
                 }
             </div>
         </div>;
@@ -106,11 +125,9 @@ Marquee.defaultProps = {
 };
 if (process.env.NODE_ENV !== 'production') {
     Marquee.PropTypes = {
-        // 滚动一条记录的时间
-        scrollTime: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-        // 滚动一条记录后的暂停时间
-        scrolldelay: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
-    }; 
+        scrollTime: PropTypes.number,
+        scrolldelay: PropTypes.number
+    };
 }
 
 export default Marquee;
