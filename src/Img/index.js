@@ -27,6 +27,8 @@ export default class Img extends Component {
     loadImg() {
         Util.loadImg(this.refs.img, this.props.src, () => {
             this.refs.img.classList.remove('img-load-before');
+        }, () => {
+            this.refs.img.src = this.defaultImg;
         });
     }
 
@@ -68,6 +70,7 @@ export default class Img extends Component {
                     throw new Error(`${currentSrcName}不存在`);
                 }
             }
+            this.defaultImg = currentSrc;
         }
 
         return <img ref="img" {...this.props} className={realClassName} src={currentSrc} />;
