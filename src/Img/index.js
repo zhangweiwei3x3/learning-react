@@ -21,6 +21,7 @@
 import {Util} from '../libs/Util';
 
 const {Component, PropTypes} = React;
+const reqImg = require.context('./');
 
 export default class Img extends Component {
     loadImg() {
@@ -61,7 +62,7 @@ export default class Img extends Component {
             } else {
                 let currentSrcName = `./default-${scale ? scale.replace(':', 'x') : ''}${deafultImgName ? '-' + deafultImgName : ''}.${type}`;
                 
-                currentSrc = require(currentSrcName);
+                currentSrc = reqImg(currentSrcName);
 
                 if (process.env.NODE_ENV !== 'production' && !currentSrc) {
                     throw new Error(`${currentSrcName}不存在`);

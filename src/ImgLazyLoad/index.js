@@ -17,6 +17,7 @@ const {Component, PropTypes} = React;
 
 import {Util, throttle} from '../libs/Util';
 import Img from '../Img';
+const reqImg = require.context('../Img');
 
 export class ImgLazyLoad extends Component {
     render() {
@@ -54,6 +55,26 @@ export class ImgLazyLoadWrap extends Component {
             img.classList.remove('img-load-before');
 
             this.imgsRemove(img);
+        }, () => {
+            let deafultImg = img.getAttribute('deafultImg'),
+                currentSrc;
+
+            if (deafultImg) {
+                currentSrc = deafultImg;
+            } else {
+                let scale = img.getAttribute('scale'),
+                    deafultImgName = img.getAttribute('deafultImgName'),
+                    type = img.getAttribute('type'),
+                    currentSrcName = `./default-${scale ? scale.replace(':', 'x') : ''}${deafultImgName ? '-' + deafultImgName : ''}.${type}`;
+                
+                currentSrc = reqImg(currentSrcName);
+
+                if (process.env.NODE_ENV !== 'production' && !currentSrc) {
+                    throw new Error(`${currentSrcName}不存在`);
+                }
+            }
+
+            img.src = currentSrc;
         });
     }
 

@@ -132,15 +132,20 @@ export const Util = {
     },
 
     // 图片加载
-    loadImg: function (imgDom, src, callback) {
+    loadImg: function (imgDom, src, successCallback, errorCallback) {
         let img = new Image();
 
         img.onload = () => {
             imgDom.src = src;
 
-            typeof callback === 'function' && callback(imgDom);
+            typeof successCallback === 'function' && successCallback(imgDom);
 
-            img = img.onload = null;
+            img = img.onload = img.onerror = null;
+        };
+        img.onerror = () => {
+            typeof errorCallback === 'function' && errorCallback(imgDom);
+
+            img = img.onload = img.onerror = null;
         };
         img.src = src;
     }
