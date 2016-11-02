@@ -51,7 +51,6 @@ export class ImgLazyLoadWrap extends Component {
 
     loadImg(img) {
         Util.loadImg(img, img.dataset.src, () => {
-            img.classList.remove(ImgLazyLoad.class);
             img.classList.remove('img-load-before');
 
             this.imgsRemove(img);
@@ -123,7 +122,9 @@ export class ImgLazyLoadWrap extends Component {
     }
 
     componentDidUpdate() {
-        this.imgs = Array.from(this.refs.lazyLoadWrap.querySelectorAll('.' + ImgLazyLoad.class));
+        this.imgs = Array.from(this.refs.lazyLoadWrap.querySelectorAll('.' + ImgLazyLoad.class)).filter((item) => {
+            return item.src !== item.dataset.src;
+        });
         this.lazyLoad();
     }
 
