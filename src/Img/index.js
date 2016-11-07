@@ -25,10 +25,12 @@ const reqImg = require.context('./');
 
 export default class Img extends Component {
     loadImg() {
-        Util.loadImg(this.refs.img, this.props.src, () => {
-            this.refs.img.classList.remove('img-load-before');
+        const {img} = this.refs;
+        
+        Util.loadImg(img, this.props.src, () => {
+            img.classList.remove('img-load-before');
         }, () => {
-            this.refs.img.src = this.defaultImg;
+            img.src = this.defaultImg;
         });
     }
 

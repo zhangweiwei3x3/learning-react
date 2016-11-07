@@ -100,12 +100,13 @@ class Marquee extends Component {
         this.init();
     }
 
-    componentDidUpdate() {
-        this.init();
-    }
-
-    omponentWillUnmount() {
-        this.timer && this.detachTransition();
+    componentWillUnmount() {
+        if (this.timer) {
+            clearTimeout(this.timer);
+            this.detachTransition();
+            this.refs.marqueeContent.style = '';
+            this.timer = null;
+        }
     }
 
     render() {
