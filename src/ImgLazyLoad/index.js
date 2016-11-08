@@ -5,7 +5,7 @@
  * date: 2016-10-14
  *
  *  eventType:  监听事件类型（'scroll', 'touchmove'）
- *  eventTarget: 滚动容器（window, 'self', 'parent'）
+ *  isWinScroll: 滚动容器是否是window
  *  offsetX: 开始加载时的左边界值（string, number）
  *  offsetY: 开始加载时的下边界值（string, number）
  *  
@@ -85,7 +85,7 @@ export class ImgLazyLoadWrap extends Component {
         let left = 0,
             top = 0;
 
-        if (this.props.eventTarget !== window) {
+        if (!this.props.isWinScroll) {
             let bound = this.target.getBoundingClientRect();
 
             left = bound.left;
@@ -102,23 +102,24 @@ export class ImgLazyLoadWrap extends Component {
     }
 
     init() {
-        let {eventTarget, offsetX, offsetY} = this.props;
+        let {isWinScroll, offsetX, offsetY} = this.props;
         
         offsetX = +offsetX;
         offsetY = +offsetY;
 
-        if (eventTarget === window) {
+        if (isWinScroll) {
             this.target = window;
             this.width = window.innerHeight + offsetX;
             this.height = window.innerHeight + offsetY;
-        } else if (eventTarget === 'self') {
-            this.target = this.refs.lazyLoadWrap;
-            this.width = parseFloat(Util.getStyle(this.target, 'width')) + offsetX;
-            this.height = parseFloat(Util.getStyle(this.target, 'height')) + offsetY;
         } else {
-            this.target = this.refs.lazyLoadWrap.parentNode;
-            this.width = parseFloat(Util.getStyle(this.target, 'width')) + offsetX;
-            this.height = parseFloat(Util.getStyle(this.target, 'height')) + offsetY;
+            let reg = /(scroll|auto)/;
+
+            this.target = this.refs.lazyLoadWrap;
+            while (!reg.test(Utils.getStyle(this.target, 'overflowY'))) {
+                this.target = this.target.parentNode;
+            }
+            this.width = parseFloat(Utils.getStyle(this.target, 'width')) + offsetX;
+            this.height = parseFloat(Utils.getStyle(this.target, 'height')) + offsetY;
         }
     }
 
@@ -162,7 +163,7 @@ export class ImgLazyLoadWrap extends Component {
 
 ImgLazyLoadWrap.defaultProps = {
     eventType: 'scroll',
-    eventTarget: window,
+    isWinScroll: false,
     offsetX: 0,
     offsetY: 0
 };
@@ -170,8 +171,8 @@ if (process.env.NODE_ENV !== 'production') {
     ImgLazyLoadWrap.PropTypes = {
         // 监听事件类型
         eventType: PropTypes.oneOf(['scroll', 'touchmove']),
-        // 滚动容器
-        eventTarget: PropTypes.oneOf([window, 'self', 'parent']),
+        // 滚动容器是否是 window
+        isWinScroll: PropTypes.bool,
         // 开始加载时的左边界值
         offsetX: PropTypes.oneOf([PropTypes.number, PropTypes.string]),
         // 开始加载时的下边界值
