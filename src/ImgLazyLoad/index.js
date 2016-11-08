@@ -115,7 +115,10 @@ export class ImgLazyLoadWrap extends Component {
             let reg = /(scroll|auto)/;
 
             this.target = this.refs.lazyLoadWrap;
-            while (!reg.test(Utils.getStyle(this.target, 'overflowY'))) {
+            while (true) {
+                if (reg.test(Utils.getStyle(this.target, 'overflowY')) || reg.test(Utils.getStyle(this.target, 'overflowX'))) {
+                    break;
+                }
                 this.target = this.target.parentNode;
             }
             this.width = parseFloat(Utils.getStyle(this.target, 'width')) + offsetX;
