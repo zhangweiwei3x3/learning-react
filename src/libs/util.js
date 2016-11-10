@@ -140,12 +140,12 @@ export const Util = {
 
             typeof successCallback === 'function' && successCallback(imgDom);
 
-            img = img.onload = img.onerror = null;
+            img = img.onload = img.onerror = imgDom = src = successCallback = errorCallback = null;
         };
         img.onerror = () => {
             typeof errorCallback === 'function' && errorCallback(imgDom);
 
-            img = img.onload = img.onerror = null;
+            img = img.onload = img.onerror = imgDom = src = successCallback = errorCallback = null;
         };
         img.src = src;
     }

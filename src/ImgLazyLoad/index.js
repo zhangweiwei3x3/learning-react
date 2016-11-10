@@ -131,11 +131,11 @@ export class ImgLazyLoadWrap extends Component {
     }
 
     attachEvent() {
-        this.target.addEventListener('resize', this.resizeEvent, false);
+        window.addEventListener('resize', this.resizeEvent, false);
         this.target.addEventListener(this.props.eventType, this.lazyLoad, false);
     }
     detachEvent() {
-        this.target.removeEventListener('resize', this.resizeEvent, false);
+        window.removeEventListener('resize', this.resizeEvent, false);
         this.target.removeEventListener(this.props.eventType, this.lazyLoad, false);
     }
 
@@ -155,6 +155,7 @@ export class ImgLazyLoadWrap extends Component {
 
     componentWillUnmount() {
         this.detachEvent();
+        this.imgs = this.target = null;
     }
 
     render() {
