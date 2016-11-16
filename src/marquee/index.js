@@ -56,7 +56,7 @@ class Marquee extends Component {
         if (this.timer) {
             clearTimeout(this.timer);
             this.detachTransition();
-            this.refs.marqueeContent.style = '';
+            this.refs.marqueeContent.removeAttribute('style');
         }
 
         if (!children || !children.length || children.length < 2) {
@@ -104,8 +104,6 @@ class Marquee extends Component {
         if (this.timer) {
             clearTimeout(this.timer);
             this.detachTransition();
-            this.refs.marqueeContent.style = '';
-            this.timer = null;
         }
     }
 
