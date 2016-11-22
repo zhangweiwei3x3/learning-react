@@ -2,8 +2,6 @@
  * anchor : zww
  * time   : 2016-10-14
  */
-'use strict';
-
 import {ImgLazyLoadWrap, ImgLazyLoad} from '../../../src/ImgLazyLoad';
 
 class App extends React.Component {

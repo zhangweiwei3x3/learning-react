@@ -3,7 +3,6 @@
  * date: 2016-10-10
  */
 
-'use strict';
 
 /**
  * [throttle 函数节流]
@@ -132,22 +131,21 @@ export const Util = {
     },
 
     // 图片加载
-    loadImg: function (imgDom, src, successCallback, errorCallback) {
-        let img = new Image();
+    loadImg: function (imgDom, src) {
+        return new Promise((resolve, reject) => {
+            let img = new Image();
 
-        img.onload = () => {
-            imgDom.src = src;
-
-            typeof successCallback === 'function' && successCallback(imgDom);
-
-            img = img.onload = img.onerror = imgDom = src = successCallback = errorCallback = null;
-        };
-        img.onerror = () => {
-            typeof errorCallback === 'function' && errorCallback(imgDom);
-
-            img = img.onload = img.onerror = imgDom = src = successCallback = errorCallback = null;
-        };
-        img.src = src;
+            img.onload = (e) => {
+                imgDom.src = src;
+                resolve(e);
+                img = img.onload = img.onerror = imgDom = src = null;
+            };
+            img.onerror = (e) => {
+                reject(e);
+                img = img.onload = img.onerror = imgDom = src = null;
+            };
+            img.src = src;
+        });
     }
     
 };

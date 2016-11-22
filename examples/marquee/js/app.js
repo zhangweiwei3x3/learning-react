@@ -2,8 +2,6 @@
  * anchor : zww
  * time   : 2016-10-11
  */
-'use strict';
-
 import Marquee from '../../../src/Marquee';
 
 class App extends React.Component {

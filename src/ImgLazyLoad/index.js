@@ -10,13 +10,9 @@
  *  offsetY: 开始加载时的下边界值（string, number）
  *  
  */
-
-'use strict';
-
-const {Component, PropTypes} = React;
-
 import {Util, throttle} from '../libs/Util';
 import Img from '../Img';
+const {Component, PropTypes} = React;
 const reqImg = require.context('../Img');
 
 export class ImgLazyLoad extends Component {
@@ -51,31 +47,32 @@ export class ImgLazyLoadWrap extends Component {
     }
 
     loadImg(img) {
-        Util.loadImg(img, img.dataset.src, () => {
-            img.classList.remove('img-load-before');
+        Util.loadImg(img, img.dataset.src)
+            .then(() => {
+                img.classList.remove('img-load-before');
 
-            this.imgsRemove(img);
-        }, () => {
-            let deafultImg = img.getAttribute('deafultImg'),
-                currentSrc;
+                this.imgsRemove(img);
+            }, () => {
+                let deafultImg = img.getAttribute('deafultImg'),
+                    currentSrc;
 
-            if (deafultImg) {
-                currentSrc = deafultImg;
-            } else {
-                let scale = img.getAttribute('scale'),
-                    deafultImgName = img.getAttribute('deafultImgName'),
-                    type = img.getAttribute('type'),
-                    currentSrcName = `./default-${scale ? scale.replace(':', 'x') : ''}${deafultImgName ? '-' + deafultImgName : ''}.${type}`;
-                
-                currentSrc = reqImg(currentSrcName);
+                if (deafultImg) {
+                    currentSrc = deafultImg;
+                } else {
+                    let scale = img.getAttribute('scale'),
+                        deafultImgName = img.getAttribute('deafultImgName'),
+                        type = img.getAttribute('type'),
+                        currentSrcName = `./default-${scale ? scale.replace(':', 'x') : ''}${deafultImgName ? '-' + deafultImgName : ''}.${type}`;
+                    
+                    currentSrc = reqImg(currentSrcName);
 
-                if (process.env.NODE_ENV !== 'production' && !currentSrc) {
-                    throw new Error(`${currentSrcName}不存在`);
+                    if (process.env.NODE_ENV !== 'production' && !currentSrc) {
+                        throw new Error(`${currentSrcName}不存在`);
+                    }
                 }
-            }
 
-            img.src = currentSrc;
-        });
+                img.src = currentSrc;
+            });
     }
 
     lazyLoad() {
@@ -116,13 +113,13 @@ export class ImgLazyLoadWrap extends Component {
 
             this.target = this.refs.lazyLoadWrap;
             while (true) {
-                if (reg.test(Utils.getStyle(this.target, 'overflowY')) || reg.test(Utils.getStyle(this.target, 'overflowX'))) {
+                if (reg.test(Util.getStyle(this.target, 'overflowY')) || reg.test(Util.getStyle(this.target, 'overflowX'))) {
                     break;
                 }
                 this.target = this.target.parentNode;
             }
-            this.width = parseFloat(Utils.getStyle(this.target, 'width')) + offsetX;
-            this.height = parseFloat(Utils.getStyle(this.target, 'height')) + offsetY;
+            this.width = parseFloat(Util.getStyle(this.target, 'width')) + offsetX;
+            this.height = parseFloat(Util.getStyle(this.target, 'height')) + offsetY;
         }
     }
 

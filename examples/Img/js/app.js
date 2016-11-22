@@ -2,8 +2,6 @@
  * anchor : zww
  * time   : 2016-10-13
  */
-'use strict';
-
 import Img from '../../../src/Img';
 
 class App extends React.Component {

@@ -22,6 +22,7 @@
     # 全局变量
     # new webpack.ProvidePlugin
     "globals": {
+        "Promise": true,
         "require": true,
         "process": true,
         "Symbol": true,

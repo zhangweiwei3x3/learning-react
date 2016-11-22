@@ -2,8 +2,6 @@
  * anchor : zww
  * time   : 2016-10-10
  */
-'use strict';
-
 import {openAlert, openConfirm} from '../../../src/Dialog';
 
 let div = document.createElement('div'),

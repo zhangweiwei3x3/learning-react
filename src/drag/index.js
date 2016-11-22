@@ -11,7 +11,6 @@
  *   onChange: 拖拽结束的回调函数 (func)
  *   
  */
-'use strict';
 const {Component, PropTypes} = React;
 
 // thead th

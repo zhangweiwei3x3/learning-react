@@ -8,12 +8,8 @@
  * scrolldelay: 滚动一条记录后的暂停时间 string）
  *
  */
-
-'use strict';
-
-const {Component, PropTypes} = React;
-
 import {Util} from '../libs/Util';
+const {Component, PropTypes} = React;
 
 class Marquee extends Component {
     constructor(...args) {

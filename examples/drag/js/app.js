@@ -2,8 +2,6 @@
  * anchor : zww
  * time   : 2016-09-06
  */
-'use strict';
-
 import Drag from '../../../src/Drag';
 
 class SelectSort extends React.Component {

@@ -2,8 +2,6 @@
  * anchor : zww
  * time   : 2016-10-09
  */
-'use strict';
-
 import Modal from '../../../src/Modal';
 
 class App extends React.Component {

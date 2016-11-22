@@ -15,11 +15,7 @@
  *  initLoad: 初始化就加载图片（bool）
  *
  */
-
-'use strict';
-
 import {Util} from '../libs/Util';
-
 const {Component, PropTypes} = React;
 const reqImg = require.context('./');
 
@@ -27,11 +23,12 @@ export default class Img extends Component {
     loadImg() {
         const {img} = this.refs;
         
-        Util.loadImg(img, this.props.src, () => {
-            img.classList.remove('img-load-before');
-        }, () => {
-            img.src = this.defaultImg;
-        });
+        Util.loadImg(img, this.props.src)
+            .then(() => {
+                img.classList.remove('img-load-before');
+            }, () => {
+                img.src = this.defaultImg;
+            });
     }
 
     componentDidMount() {

@@ -22,13 +22,9 @@
  *     onOk: 点击确认按钮的回调函数（func）
  *     onCancel: 点击取消按钮的回调函数（func）
  */
-
-'use strict';
-
+import Modal from '../Modal';
 const {Component, PropTypes} = React;
 const {render} = ReactDOM;
-
-import Modal from '../Modal';
 
 class Dialog extends Component {
     constructor(...args) {
