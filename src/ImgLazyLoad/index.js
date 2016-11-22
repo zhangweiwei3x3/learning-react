@@ -5,6 +5,7 @@
  * date: 2016-10-14
  *
  *  eventType:  监听事件类型（'scroll', 'touchmove'）
+ *  touchmoveClass: 监听事件类型为 touchmove 时，需要再滚容器上加上这个 class
  *  isWinScroll: 滚动容器是否是window
  *  offsetX: 开始加载时的左边界值（string, number）
  *  offsetY: 开始加载时的下边界值（string, number）
@@ -82,7 +83,7 @@ export class ImgLazyLoadWrap extends Component {
         let left = 0,
             top = 0;
 
-        if (!this.props.isWinScroll) {
+        if (!this.props.isWinScroll && this.target !== window) {
             let bound = this.target.getBoundingClientRect();
 
             left = bound.left;
@@ -106,18 +107,42 @@ export class ImgLazyLoadWrap extends Component {
 
         if (isWinScroll) {
             this.target = window;
+        } else {
+            // scroll
+            if (this.props.eventType === 'scroll') {
+                let reg = /(scroll|auto)/;
+
+                this.target = this.refs.lazyLoadWrap;
+                while (true) {
+                    if (reg.test(Util.getStyle(this.target, 'overflowY')) || reg.test(Util.getStyle(this.target, 'overflowX'))) {
+                        break;
+                    }
+                    this.target = this.target.parentNode;
+                }
+
+            // touchmove
+            } else {
+                const {touchmoveClass} = this.props;
+
+                this.target = this.refs.lazyLoadWrap;
+                while (true) {
+                    if (this.target.nodeName === '#document') {
+                        this.target = window;
+                        break;
+                    }
+                    if (this.target.classList.contains(touchmoveClass)) {
+                        break;
+                    }
+                    this.target = this.target.parentNode;
+                }
+            }
+        }
+
+        // 设置 宽高
+        if (this.target === window) {
             this.width = window.innerHeight + offsetX;
             this.height = window.innerHeight + offsetY;
         } else {
-            let reg = /(scroll|auto)/;
-
-            this.target = this.refs.lazyLoadWrap;
-            while (true) {
-                if (reg.test(Util.getStyle(this.target, 'overflowY')) || reg.test(Util.getStyle(this.target, 'overflowX'))) {
-                    break;
-                }
-                this.target = this.target.parentNode;
-            }
             this.width = parseFloat(Util.getStyle(this.target, 'width')) + offsetX;
             this.height = parseFloat(Util.getStyle(this.target, 'height')) + offsetY;
         }
@@ -164,6 +189,7 @@ export class ImgLazyLoadWrap extends Component {
 
 ImgLazyLoadWrap.defaultProps = {
     eventType: 'scroll',
+    touchmoveClass: 'img-lazy-load-wrap',
     isWinScroll: false,
     offsetX: 0,
     offsetY: 0
@@ -172,6 +198,8 @@ if (process.env.NODE_ENV !== 'production') {
     ImgLazyLoadWrap.PropTypes = {
         // 监听事件类型
         eventType: PropTypes.oneOf(['scroll', 'touchmove']),
+         // 监听事件类型为 touchmove 时，需要再滚容器上加上这个 class
+        touchmoveClass: PropTypes.string,
         // 滚动容器是否是 window
         isWinScroll: PropTypes.bool,
         // 开始加载时的左边界值
