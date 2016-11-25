@@ -76,7 +76,7 @@ var webpackConfig = {
             { 
                 test: /\.scss$/,
                 exclude: /node_modules/,
-                loader: ExtractTextPlugin.extract('style', 'css!postcss!sass')
+                loader: ExtractTextPlugin.extract('style', 'css!sass')
             },
             {
                 test: /\.(png|jpg|jpeg|gif|eot|svg|ttf|woff)$/,
