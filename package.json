@@ -4,7 +4,7 @@
     "description": "",
     "main": "webpack.config.js",
     "scripts": {
-        "build": "webpack --progress --colors --display-error-details -p --progress --e prod --bail",
+        "build": "webpack --progress --colors --display-error-details --e prod",
         "start": "webpack --progress --colors --display-error-details --watch"
     },
     "dependencies": {
