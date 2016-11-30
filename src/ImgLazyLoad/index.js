@@ -38,6 +38,9 @@ export class ImgLazyLoadWrap extends Component {
     }
 
     imgsRemove(img) {
+        if (!this.imgs) {
+            return;
+        }
         for (let i = 0; i < this.imgs.length; i++) {
             if (this.imgs[i] === img) {
                 this.imgs.splice(i, 1);
