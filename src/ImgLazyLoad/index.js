@@ -80,7 +80,7 @@ export class ImgLazyLoadWrap extends Component {
     }
 
     lazyLoad() {
-        if (this.imgs.length === 0) {
+        if (!this.imgs || this.imgs.length === 0) {
             return;
         }
         let left = 0,
