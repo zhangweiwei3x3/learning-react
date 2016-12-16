@@ -139,6 +139,7 @@ export const Util = {
         // 防止一个 img 连续加载两次 地址不一样的图片
         // 我们值保留最后一次的加载
         imgDom.__src__ = src;
+
         return new Promise((resolve, reject) => {
             let img = new Image();
 
