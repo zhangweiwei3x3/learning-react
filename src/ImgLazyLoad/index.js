@@ -121,6 +121,10 @@ export class ImgLazyLoadWrap extends Component {
                         break;
                     }
                     this.target = this.target.parentNode;
+                    if (this.target.nodeName === '#document') {
+                        this.target = window;
+                        break;
+                    }
                 }
 
             // touchmove

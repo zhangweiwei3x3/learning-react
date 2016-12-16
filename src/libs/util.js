@@ -54,13 +54,18 @@ export const Util = {
     // 获取样式
     getStyle: function (elem, attr) {
         if (window.getComputedStyle) { // 标准
-            let view = elem.ownerDocument.defaultView;
+            // 防止 elem === document
+            let view = (elem.ownerDocument || elem).defaultView;
 
+            // jquery
+            // Support: IE <=11 only, Firefox <=30 (#15098, #14150)
+            // IE throws on elements created in popups
+            // FF meanwhile throws on frame elements through "defaultView.getComputedStyle"
             if (!view || !view.opener) {
                 view = window;
             }
 
-            return view.getComputedStyle(elem)[attr];
+            return window.getComputedStyle(elem)[attr];
         } else if (document.documentElement.currentStyle) { // IE
             return elem.currentStyle[attr];
         }
@@ -120,7 +125,6 @@ export const Util = {
         if (process.env.NODE_ENV !== 'production' && !elem || !width || !height) {
             throw new Error('elem, width, height 三个参数都不能为空');
         }
-
         const {top, right, bottom, left} = elem.getBoundingClientRect();
 
         if (bottom > offsetY && top < height + offsetY && right > offsetX && left < width + offsetX) {

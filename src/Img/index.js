@@ -35,11 +35,19 @@ export default class Img extends Component {
         const {isLazy, initLoad, scale} = this.props;
         const scaleXY = scale.split(':');
 
+        this.width = parseFloat(Util.getStyle(this.refs.img, 'width'));
+
+        if (this.width) {
+            this.height = this.width * scaleXY[1] / scaleXY[0];
+            this.refs.img.style.height = this.height + 'px';
+        } else {
+            this.width = window.innerWidth || 640;
+            this.height = this.width * scaleXY[1] / scaleXY[0];
+        }
+
         if (initLoad && isLazy) {
             this.loadImg();
         }
-
-        this.refs.img.style.height = parseFloat(Util.getStyle(this.refs.img, 'width')) * scaleXY[1] / scaleXY[0] + 'px';
     }
 
     componentWillReceiveProps(nextProps) {
