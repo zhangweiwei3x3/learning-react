@@ -52,7 +52,10 @@ export const Util = {
     },
 
     // 获取样式
-    getStyle: function (elem, attr) {
+    // isNumber 用于是否返回数字
+    getStyle: function (elem, attr, isNumber) {
+        let style;
+
         if (window.getComputedStyle) { // 标准
             // 防止 elem === document
             let view = (elem.ownerDocument || elem).defaultView;
@@ -65,10 +68,17 @@ export const Util = {
                 view = window;
             }
 
-            return window.getComputedStyle(elem)[attr];
+            style = window.getComputedStyle(elem)[attr];
         } else if (document.documentElement.currentStyle) { // IE
-            return elem.currentStyle[attr];
+            style = elem.currentStyle[attr];
         }
+        elem = null;
+
+        if (isNumber) {
+            return parseInt(style, 10);
+        }
+
+        return style;
     },
 
     // 获取 transition 动画结束事件
@@ -121,6 +131,7 @@ export const Util = {
     })(),
 
     // 元素是否在 width height 这个矩形内部
+    // 只有有部分在就返回 true
     checkInRect: function (elem, width, height, offsetX, offsetY) {
         if (process.env.NODE_ENV !== 'production' && !elem || !width || !height) {
             throw new Error('elem, width, height 三个参数都不能为空');
@@ -158,5 +169,50 @@ export const Util = {
             };
             img.src = src;
         });
+    },
+    
+    // 数组去重
+    // 有key表示是复杂数组去重，根据数组中对象的属性key来去重
+    arrUniq: function (arr, key) {
+        if (!Array.isArray(arr) || arr.length < 2) {
+            return arr;
+        }
+
+        // 简单数组去重
+        if (!key) {
+            return Array.from(new Set(arr));
+        }
+
+        // 复杂数组去重
+        var obj = {},
+            res = [];
+
+        arr.forEach((item) => {
+            if (!obj[item[key]]) {
+                res.push(item);
+                obj[item[key]] = true;
+            }
+        });
+
+        return res;
+    },
+
+    // 获取滚动的容器
+    // 如果是 document 就返回 window
+    getScrollParent: function (elem) {
+        let reg = /(scroll|auto)/i;
+
+        while (true) {
+            if (reg.test(Util.getStyle(elem, 'overflowY')) || reg.test(Util.getStyle(elem, 'overflowX'))) {
+                break;
+            }
+            elem = elem.parentNode;
+            if (elem.nodeName === '#document') {
+                elem = window;
+                break;
+            }
+        }
+
+        return elem;
     }
 };

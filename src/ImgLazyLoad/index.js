@@ -113,20 +113,8 @@ export class ImgLazyLoadWrap extends Component {
         } else {
             // scroll
             if (this.props.eventType === 'scroll') {
-                let reg = /(scroll|auto)/;
-
-                this.target = this.refs.lazyLoadWrap;
-                while (true) {
-                    if (reg.test(Util.getStyle(this.target, 'overflowY')) || reg.test(Util.getStyle(this.target, 'overflowX'))) {
-                        break;
-                    }
-                    this.target = this.target.parentNode;
-                    if (this.target.nodeName === '#document') {
-                        this.target = window;
-                        break;
-                    }
-                }
-
+                this.target = Util.getScrollParent(this.refs.lazyLoadWrap);
+                
             // touchmove
             } else {
                 const {touchmoveClass} = this.props;

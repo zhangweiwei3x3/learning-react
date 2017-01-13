@@ -26,6 +26,7 @@
         "require": true,
         "process": true,
         "Symbol": true,
+        "Set": true,
         "React": true,
         "ReactDOM": true,
         "Redux": true,
