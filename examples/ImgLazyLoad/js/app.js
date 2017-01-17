@@ -2,7 +2,7 @@
  * anchor : zww
  * time   : 2016-10-14
  */
-import {ImgLazyLoadWrap, ImgLazyLoad} from '../../../src/ImgLazyLoad';
+import {ImgLazyLoadWrap, ImgLazyLoad} from '../../../src/components/ImgLazyLoad';
 
 class App extends React.Component {
     componentDidMount() {

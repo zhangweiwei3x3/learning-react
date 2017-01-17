@@ -2,7 +2,7 @@
  * anchor : zww
  * time   : 2016-09-06
  */
-import Drag from '../../../src/Drag';
+import Drag from '../../../src/components/Drag';
 
 class SelectSort extends React.Component {
     constructor(...args) {

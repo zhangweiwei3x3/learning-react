@@ -11,7 +11,7 @@
  *  offsetY: 开始加载时的下边界值（string, number）
  *  
  */
-import {Util, throttle} from '../libs/Util';
+import {Util, throttle} from '../../libs/Util';
 import Img from '../Img';
 const {Component, PropTypes} = React;
 const reqImg = require.context('../Img');

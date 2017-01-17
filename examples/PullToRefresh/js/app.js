@@ -2,24 +2,84 @@
  * anchor : zww
  * time   : 2016-10-14
  */
-import Refresh from '../../../src/PullToRefresh/Refresh';
+import PullToRefresh from '../../../src/components/PullToRefresh/';
+
+const initData = [];
+
+for (let i = 0; i < 10; i++) {
+    initData.push((i + '').repeat(10));
+}
 
 class App extends React.Component {
+    constructor(...args) {
+        super(...args);
+
+        this.state = {
+            pageNo: 2,
+            hasNext: true,
+            data: [...initData]
+        };
+    }
+
     onRefresh() {
+        console.log(11111111, '下拉刷新');
         return new Promise((resolve, reject) => {
             setTimeout(() => {
+                this.setState({data: [...initData]});
+                resolve();
+            }, 3000);
+        });
+    }
+
+    onRefreshEnd(isSuccess) {
+        if (isSuccess) {
+            console.log(11111111, '刷新成功', isSuccess);
+        } else {
+            console.log(11111111, '刷新失败', isSuccess);
+        }
+    }
+
+    onLoad(pageNo = 1, pageSize = 20) {
+        const {data} = this.state;
+
+        console.log(11111111, '加载', pageNo, pageSize);
+
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                for (let i = 0; i < 10; i++) {
+                    data.push((i + '').repeat(10));
+                }
+
+                console.log(11111111, '加载完成', pageNo, pageSize);
+                this.setState({data: [...data], pageNo});
                 resolve();
             }, 1000);
         });
     }
+    onLoadEnd(isSuccess) {
+        if (isSuccess) {
+            console.log(11111111, '加载成功', isSuccess);
+        } else {
+            console.log(11111111, '加载失败', isSuccess);
+        }
+    }
 
     render() {
-        return <div className="load-more">
-            <Refresh
-                tips={[<img src="http://img5.imgtn.bdimg.com/it/u=2438757233,2961043306&fm=21&gp=0.jpg" />, '松开更新...', '正在加载...']}
-                onRefresh={this.onRefresh.bind(this)} />
-            <div className="content"></div>
-        </div>;
+        const {hasNext, data} = this.state;
+
+        return <PullToRefresh
+            onLoad={this.onLoad.bind(this)}
+            onLoadEnd={this.onLoadEnd.bind(this)}
+            hasNext={hasNext}
+            tipsRefresh={[<img src="http://img5.imgtn.bdimg.com/it/u=2438757233,2961043306&fm=21&gp=0.jpg" />, '松开更新...', '正在加载...']}
+            onRefresh={this.onRefresh.bind(this)}
+            onRefreshEnd={this.onRefreshEnd.bind(this)}>
+            {
+                data.map((item, index) => {
+                    return <div key={index}>{item}</div>;
+                })
+            }
+        </PullToRefresh>;
     }
 }
 

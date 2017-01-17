@@ -2,7 +2,7 @@
  * anchor : zww
  * time   : 2016-10-11
  */
-import Marquee from '../../../src/Marquee';
+import Marquee from '../../../src/components/Marquee';
 
 class App extends React.Component {
     render() {

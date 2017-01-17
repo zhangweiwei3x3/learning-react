@@ -2,7 +2,7 @@
  * anchor : zww
  * time   : 2016-10-10
  */
-import {openAlert, openConfirm} from '../../../src/Dialog';
+import {openAlert, openConfirm} from '../../../src/components/Dialog';
 
 let div = document.createElement('div'),
     html;

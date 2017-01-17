@@ -15,7 +15,7 @@
  *  initLoad: 初始化就加载图片（bool）
  *
  */
-import {Util} from '../libs/Util';
+import {Util} from '../../libs/Util';
 const {Component, PropTypes} = React;
 const reqImg = require.context('./');
 

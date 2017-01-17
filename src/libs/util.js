@@ -199,11 +199,11 @@ export const Util = {
 
     // 获取滚动的容器
     // 如果是 document 就返回 window
-    getScrollParent: function (elem) {
+    getScrollPane: function (elem) {
         let reg = /(scroll|auto)/i;
 
         while (true) {
-            if (reg.test(Util.getStyle(elem, 'overflowY')) || reg.test(Util.getStyle(elem, 'overflowX'))) {
+            if (reg.test(this.getStyle(elem, 'overflowY')) || reg.test(this.getStyle(elem, 'overflowX'))) {
                 break;
             }
             elem = elem.parentNode;

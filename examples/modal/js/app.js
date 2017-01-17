@@ -2,7 +2,7 @@
  * anchor : zww
  * time   : 2016-10-09
  */
-import Modal from '../../../src/Modal';
+import Modal from '../../../src/components/Modal';
 
 class App extends React.Component {
     constructor(...args) {

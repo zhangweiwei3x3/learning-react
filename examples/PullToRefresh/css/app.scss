@@ -1,10 +1,11 @@
-@import '../../../src/PullToRefresh/style.scss';
+@import '../../../src/components/PullToRefresh/style.scss';
 * {
     margin: 0;
     padding: 0;
 }
 img {
     display: block;
+    width: 100%;
     border: 0;
 }
 

@@ -1,7 +1,17 @@
 /**
  * 下拉刷新
+ * 
+ * anchor: zww
+ * date: 2017-01-13
+ *
+ *  threshold：允许的误差 一般不用传
+ *  offset：下拉最大偏移量，实际下拉距离等于 this.height + offset
+ *  duration：动画执行时间
+ *  tips：下拉刷新的提示信息  [<span>下拉刷新...</span>, '松开更新...', '正在加载...']
+ *  onRefresh：下拉刷新函数，promise 对象
+ *  onRefreshEnd: 下拉结束后的回调函数 onRefreshEnd(isSuccess) isSuccess 用于判断是成功还是失败
  */
-import {Util} from '../libs/Util';
+import {Util} from '../../libs/Util';
 const {Component, PropTypes} = React;
 
 export default class Refresh extends Component {
@@ -37,7 +47,6 @@ export default class Refresh extends Component {
         this.onTouchStart = this.onTouchStart.bind(this);
         this.onTouchMove = this.onTouchMove.bind(this);
         this.onTouchEnd = this.onTouchEnd.bind(this);
-        this.refreshEnd = this.refreshEnd.bind(this);
     }
 
     animate(offset = 0, duration = 0) {
@@ -45,17 +54,21 @@ export default class Refresh extends Component {
         this.touchParent.style[this.transform] = `translate3d(0px, ${offset}px, 0px)`;
     }
 
-    refreshEnd() {
+    // 刷新结束的回调
+    refreshEnd(isSuccess) {
         this.refreshing = false;
         this.animate(0, this.duration);
         this.timer && clearTimeout(this.timer);
         setTimeout(() => {
             this.setState({status: 0});
         }, this.duration);
+        const {onRefreshEnd} = this.props;
+
+        typeof onRefreshEnd === 'function' && onRefreshEnd(isSuccess);
     }
 
     onTouchStart(e) {
-        if (!this.refreshing && this.scrollParent.scrollTop <= this.threshold) {
+        if (!this.props.isLoading && !this.refreshing && this.scrollParent.scrollTop <= this.threshold) {
             this.isStart = true;
             this.isMoveing = false;
             this.startPageY = e.touches[0].pageY;
@@ -91,15 +104,19 @@ export default class Refresh extends Component {
         this.timer = setTimeout(() => {
             this.setState({status: 2});
         }, this.duration);
-        this.props.onRefresh().then(this.refreshEnd).catch(this.refreshEnd);
+        let res = this.props.onRefresh();
+
+        if (res) {
+            res.then(this.refreshEnd.bind(this, true), this.refreshEnd.bind(this, false));
+        }
     }
 
     componentDidMount() {
-        let refresh = this.refs.refresh,
+        let {refresh} = this.refs,
             img = refresh.getElementsByTagName('img')[0];
 
         this.touchParent = refresh.parentNode;
-        this.scrollParent = Util.getScrollParent(refresh);
+        this.scrollParent = Util.getScrollPane(refresh);
         if (this.scrollParent === window) {
             this.scrollParent = document.body;
         }
@@ -107,6 +124,7 @@ export default class Refresh extends Component {
         this.touchParent.addEventListener('touchmove', this.onTouchMove, false);
         this.touchParent.addEventListener('touchend', this.onTouchEnd, false);
         this.touchParent.addEventListener('touchcancel', this.onTouchEnd, false);
+        // 下拉刷新的提示信息 如果是图片
         if (img) {
             img.onload = () => {
                 this.height = Util.getStyle(refresh, 'height', true);
@@ -153,9 +171,11 @@ if (process.env.NODE_ENV !== 'production') {
         offset: PropTypes.oneOf([PropTypes.number, PropTypes.string]),
         // 动画执行时间
         duration: PropTypes.oneOf([PropTypes.number, PropTypes.string]),
-        // 下拉刷新的提示信息  ['下拉刷新...', '松开更新...', '正在加载...']
+        // 下拉刷新的提示信息 ['下拉刷新...', '松开更新...', '正在加载...']
         tips: PropTypes.array,
-        // 下拉刷新事件 Promise 对象
-        onRefresh: PropTypes.func.isRequired
+        // 下拉刷新事件 promise 对象
+        onRefresh: PropTypes.func.isRequired,
+        // 下拉刷新事件结束的回调函数
+        onRefreshEnd: PropTypes.func
     }; 
 }

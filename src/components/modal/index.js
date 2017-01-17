@@ -16,7 +16,7 @@
  *  closeCallback: 弹窗关闭后的回调（func）
  *  onCancel: 点击确认按钮的回调（func）
  */
-import {Util, throttle} from '../libs/Util';
+import {Util, throttle} from '../../libs/Util';
 const {Component, PropTypes} = React;
 
 class Modal extends Component {

@@ -2,7 +2,7 @@
  * anchor : zww
  * time   : 2016-10-13
  */
-import Img from '../../../src/Img';
+import Img from '../../../src/components/Img';
 
 class App extends React.Component {
     render() {
