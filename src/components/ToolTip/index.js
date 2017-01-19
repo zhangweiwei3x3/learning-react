@@ -17,9 +17,9 @@
  *  closeCallback: 弹窗关闭后的回调（func）
  *  onCancel: 点击确认按钮的回调（func）
  */
-const openTips = (option) => {
+const openToolTip = (option) => {
     let div = document.createElement('div'),
-        {msg, animation, duration, className} = Object.assign({}, openTips.defaultOption, option);
+        {msg, animation, duration, className} = Object.assign({}, openToolTip.defaultOption, option);
 
     div.className = `tips show animate${className ? ' ' + className : ''}`;
     div.innerHTML = `<div class="tips-content">${msg}</div>`;
@@ -38,9 +38,9 @@ const openTips = (option) => {
     }, 0);
 };
 
-openTips.defaultOption = {
+openToolTip.defaultOption = {
     animation: 3000, // 动画时间
     duration: 5000 // 显示的时间
 };
 
-export default openTips;
+export default openToolTip;
