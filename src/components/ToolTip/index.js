@@ -32,7 +32,7 @@ const openToolTip = (option) => {
             div.classList.remove('in');
             div.classList.add('out');
             setTimeout(() => {
-                // document.body.removeChild(div);
+                document.body.removeChild(div);
             }, animation);
         }, duration);
     }, 0);
