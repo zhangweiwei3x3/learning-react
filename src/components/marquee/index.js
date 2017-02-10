@@ -8,6 +8,7 @@
  * scrolldelay: 滚动一条记录后的暂停时间 string）
  *
  */
+import './style.scss';
 import {Util} from '../../libs/Util';
 const {Component, PropTypes} = React;
 

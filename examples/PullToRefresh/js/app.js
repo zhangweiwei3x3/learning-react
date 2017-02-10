@@ -23,10 +23,11 @@ class App extends React.Component {
 
     onRefresh() {
         console.log(11111111, '下拉刷新');
+        
         return new Promise((resolve, reject) => {
             setTimeout(() => {
                 this.setState({data: [...initData]});
-                resolve();
+                reject();
             }, 3000);
         });
     }
@@ -52,7 +53,7 @@ class App extends React.Component {
 
                 console.log(11111111, '加载完成', pageNo, pageSize);
                 this.setState({data: [...data], pageNo});
-                resolve();
+                reject();
             }, 1000);
         });
     }

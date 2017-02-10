@@ -11,6 +11,7 @@
  *  onRefresh：下拉刷新函数，promise 对象
  *  onRefreshEnd: 下拉结束后的回调函数 onRefreshEnd(isSuccess) isSuccess 用于判断是成功还是失败
  */
+import './style.scss';
 import {Util} from '../../libs/Util';
 const {Component, PropTypes} = React;
 

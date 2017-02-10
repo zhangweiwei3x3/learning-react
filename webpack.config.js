@@ -8,14 +8,18 @@ var packPath = path.join(__dirname, './dist');
 var CleanWebpackPlugin = require('clean-webpack-plugin');
 // sass
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
+var px2rem = require('postcss-px2rem');
+var autoprefixer = require('autoprefixer');
 // html
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 
 var plugins = [];
 var htmlMinify = null;
 var loaders = ['babel', 'eslint-loader'];
+var env = 'development';
 // bulid
 if (require('yargs').argv.e === 'prod') {
+    env = 'production';
     loaders = ['babel'];
     htmlMinify = {
         collapseWhitespace: true, // 去除空格
@@ -30,6 +34,8 @@ if (require('yargs').argv.e === 'prod') {
             'NODE_ENV': '"production"'
         }
     }));
+    // 模块去重
+    buildPlugins.push(new webpack.optimize.DedupePlugin());
     plugins.push(new webpack.optimize.UglifyJsPlugin({
         sourceMap: false,
         compress: {
@@ -44,7 +50,7 @@ if (require('yargs').argv.e === 'prod') {
             warnings: false
         },
         mangle: {
-            except: ['exports', 'require' ]
+            except: ['exports', 'require']
         }
     }));
 }
@@ -52,6 +58,8 @@ var webpackConfig = {
     entry: {
         // 公用js打包合并
         lib: [
+            'babel-polyfill',
+            'whatwg-fetch',
             'react',
             'react-dom',
             'redux',
@@ -62,28 +70,42 @@ var webpackConfig = {
     output: {
         path: packPath,
         filename: '[name]/index.js',
+        pathinfo: env !== 'production' // 合并文件中打印出打包的文件名称
     },
     module: {
-        loaders: [
-            // jsx es6 解析
-            {
-                test: /\.jsx?$/,
-                exclude: /node_modules/,
-                loaders: loaders
-            },
-
-            // sass 解析
-            { 
-                test: /\.scss$/,
-                exclude: /node_modules/,
-                loader: ExtractTextPlugin.extract('style', 'css!sass')
-            },
-            {
-                test: /\.(png|jpg|jpeg|gif|eot|svg|ttf|woff)$/,
-                loader: 'url?limit=8192'
+        loaders: [{
+            test: /\.jsx?$/,
+            exclude: /node_modules/,
+            loaders: loaders
+        }, {
+            test: /\.s?css$/,
+            exclude: /(node_modules)/,
+            loader: ExtractTextPlugin.extract('style', 'css!postcss!sass?outputStyle=expanded')
+        }, {
+            test: /\.(png|jpg|jpeg|gif)$/,
+            exclude: /node_modules/,
+            // 8192 = 1024 * 8 小于等于8k的转换成 base64
+            loader: 'url',
+            query: {
+                limit: 8192,
+                name: env !== 'production' ? './src/img/[name].[ext]' : './src/img/[name]-[hash:6].[ext]'
             }
-        ]
+        }, {
+            test: /\.(woff|svg|eot|ttf)$/,
+            exclude: /node_modules/,
+            loader: 'url',
+            query: {
+                limit: 10240,
+                name: env !== 'production' ? './src/font/[name].[ext]' : './src/font/[name]-[hash:6].[ext]'
+            }
+        }]
     },
+    postcss: [autoprefixer({
+        browsers: ['> 0%', 'last 2 versions']
+    }), px2rem({
+        remUnit: 37.5, // iphone 6s 的默认设计稿
+        baseDpr: 1 // 默认dpr 1
+    })],
     plugins: [
         // 清空
         new CleanWebpackPlugin(packPath, {
@@ -100,6 +122,8 @@ var webpackConfig = {
             ReactRouter: 'react-router'
         }),
         new ExtractTextPlugin('[name]/style.css', {allChunks: true}),
+        // improt lib（entry.lib） 中的插件不会在其他地方加载
+        new webpack.optimize.CommonsChunkPlugin('lib', 'lib.js', Infinity),
         ...plugins
     ]
 };

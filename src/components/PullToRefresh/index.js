@@ -20,6 +20,7 @@
  *  onLoadEnd：加载函数结束后的回调函数
  * 
  */
+import './style.scss';
 import {Util} from '../../libs/Util';
 import Refresh from './Refresh';
 import LoadMore from './LoadMore';

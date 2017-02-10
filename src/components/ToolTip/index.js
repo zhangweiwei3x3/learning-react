@@ -17,6 +17,7 @@
  *  closeCallback: 弹窗关闭后的回调（func）
  *  onCancel: 点击确认按钮的回调（func）
  */
+import './style.scss';
 const openToolTip = (option) => {
     let div = document.createElement('div'),
         {msg, animation, duration, className} = Object.assign({}, openToolTip.defaultOption, option);
