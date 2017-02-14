@@ -123,7 +123,7 @@ class Modal extends Component {
     }
 
     _renderFooter(btns) {
-        return btns && <div className="modal-footer clearflex">
+        return btns && <div className="modal-footer clearfix">
             {
                 btns.map((item, index) => {
                     return <div key={index}>{item}</div>;
