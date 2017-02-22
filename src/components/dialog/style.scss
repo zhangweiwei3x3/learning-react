@@ -1,11 +1,25 @@
-@import '../modal/style.scss';
-
 .modal.alert-dialog {
     z-index: 100001;
 
-    // .modal-overlay {
-    //     background: transparent;
-    // }
+    .modal-dialog {
+        width: 280px; /* px */
+    }
+
+    .modal-footer {
+        height: 50px; /* px */
+        padding: 0 !important;
+        line-height: 50px; /* px */
+        text-align: center;
+        &>div {
+            float: none;
+            display: inline-block;
+
+            span {
+                font-size: 16px; /* px */
+                color: #ff6f00;
+            }
+        }
+    }
 }
 
 
