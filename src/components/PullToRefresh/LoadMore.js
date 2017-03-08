@@ -14,7 +14,7 @@
  * 
  */
 import './style.scss';
-import {Util} from '../../libs/Utils';
+import {Util} from '../../libs/Util';
 const {Component, PropTypes} = React;
 
 export default class LoadMore extends Component {
