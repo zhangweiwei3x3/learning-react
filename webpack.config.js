@@ -35,7 +35,7 @@ if (require('yargs').argv.e === 'prod') {
         }
     }));
     // 模块去重
-    buildPlugins.push(new webpack.optimize.DedupePlugin());
+    plugins.push(new webpack.optimize.DedupePlugin());
     plugins.push(new webpack.optimize.UglifyJsPlugin({
         sourceMap: false,
         compress: {
