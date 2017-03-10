@@ -10,9 +10,9 @@ npm run start
 
 ## 目录结构
 
-### src 中为 组件
+src 中为 组件
 
-### examples 为例子
+examples 为例子
 
 
 ## 组件有：
