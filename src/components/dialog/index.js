@@ -34,10 +34,14 @@ class Dialog extends Component {
         this.state = {
             visiable: true
         };
+
+        this.onClose = this.onClose.bind(this);
+        this.onCancel = this.onCancel.bind(this);
+        this.onOk = this.onOk.bind(this);
     }
 
     onClose() {
-        this.setState({visiable: false});
+        this.state.visiable && this.setState({visiable: false});
     }
     
     onCancel() {
@@ -54,7 +58,7 @@ class Dialog extends Component {
 
         if (typeof onOk === 'function') {
             if (manualClose) {
-                onOk(this.onClose.bind(this));
+                onOk(this.onClose);
             } else {
                 onOk();
                 this.onClose();
@@ -70,13 +74,13 @@ class Dialog extends Component {
         switch (type) {
             case 'alert': 
                 return [
-                    <button onClick={this.onCancel.bind(this)}>确定</button>
+                    <button onClick={this.onCancel}>确定</button>
                 ];
 
             case 'confirm': 
                 return [
-                    <button onClick={this.onCancel.bind(this)}>关闭</button>,
-                    <button onClick={this.onOk.bind(this)}>确定</button>
+                    <button onClick={this.onCancel}>关闭</button>,
+                    <button onClick={this.onOk}>确定</button>
                 ];
         }
     }
@@ -90,7 +94,7 @@ class Dialog extends Component {
     render() {
         const {dom} = this.props;
 
-        return <Modal {...this.props} visiable={this.state.visiable} btns={this.getBtns()} onCancel={this.onCancel.bind(this)}>
+        return <Modal {...this.props} visiable={this.state.visiable} btns={this.getBtns()} onCancel={this.onCancel}>
             {
                 dom
             }
@@ -120,6 +124,23 @@ if (process.env.NODE_ENV !== 'production') {
     }; 
 }
 
+// 从 DOM 中移除已经挂载的 React 组件
+// 如果在 container 内没有组件挂载，这个函数将什么都不做。
+// 如果组件成功移除，则返回 true；
+// 如果没有组件被移除，则返回 false
+function unmountComponentAtNode(container) {
+    if (!container) {
+        return;
+    }
+    const unmountResult = ReactDOM.unmountComponentAtNode(container);
+
+    if (unmountResult) {
+        container.parentNode.removeChild(container);
+    }
+
+    container = null;
+}
+
 /**
  * openAlert
  *     title: 提示标题
@@ -129,38 +150,27 @@ if (process.env.NODE_ENV !== 'production') {
  *     hasCloseBtn: 标题处是否有关闭按钮
  *     manualClose: 是否手动关闭弹窗
  *     onOk: 点击确认按钮的回调函数
+ *     closeCallback: 弹窗关闭后的回调
  * 
  */
-// alert 只有一个
-var alertIsVisible = false;
-
 export const openAlert = (option) => {
-    let dialogContainer = document.getElementById(openAlert.id),
-        className = option.className;
+    let div = document.createElement('div'),
+        {className, closeCallback} = option.className;
 
-    if (!dialogContainer) {
-        dialogContainer = document.createElement('div');
-        dialogContainer.id = openAlert.id;
-        document.body.appendChild(dialogContainer);
-    }
     option.type = 'alert';
     option.visiable = true;
     option.onCancel = option.onOk;
     option.onOk = null;
     option.closeCallback = () => {
-        alertIsVisible = false;
+        unmountComponentAtNode(div);
+        typeof closeCallback === 'function' && closeCallback();
     };
     className = `alert-dialog${className ? ' ' + className : ''}`;
 
-    if (alertIsVisible) {
-        Modal.count--;
-    }
-    alertIsVisible = true;
+    document.body.appendChild(div);
 
-    render(<Dialog {...option} className={className} />, dialogContainer);
+    render(<Dialog {...option} className={className} />, div);
 };
-openAlert.id = 'js-alert-dialog-' + Math.random().toString(36).slice(2, 5);
-
 
 /**
  * openConfirm
@@ -171,33 +181,22 @@ openAlert.id = 'js-alert-dialog-' + Math.random().toString(36).slice(2, 5);
  *     hasCloseBtn: 标题处是否有关闭按钮
  *     onOk: 点击确认按钮的回调函数
  *     onCancel: 点击取消按钮的回调函数
+ *     closeCallback: 弹窗关闭后的回调
  * 
  */
-// confirm 只有一个
-var confirmIsVisible = false;
-
 export const openConfirm = (option) => {
-    let dialogContainer = document.getElementById(openConfirm.id),
-        className = option.className;
-
-    if (!dialogContainer) {
-        dialogContainer = document.createElement('div');
-        dialogContainer.id = openConfirm.id;
-        document.body.appendChild(dialogContainer);
-    }
+    let div = document.createElement('div'),
+        {className, closeCallback} = option.className;
 
     option.type = 'confirm';
     option.visiable = true;
     option.closeCallback = () => {
-        confirmIsVisible = false;
+        unmountComponentAtNode(div);
+        typeof closeCallback === 'function' && closeCallback();
     };
     className = `confirm-dialog${className ? ' ' + className : ''}`;
 
-    if (confirmIsVisible) {
-        Modal.count--;
-    }
-    confirmIsVisible = true;
+    document.body.appendChild(div);
 
-    render(<Dialog {...option} className={className} />, dialogContainer);
+    render(<Dialog {...option} className={className} />, div);
 };
-openConfirm.id = 'js-confirm-dialog-' + Math.random().toString(36).slice(2, 5);
