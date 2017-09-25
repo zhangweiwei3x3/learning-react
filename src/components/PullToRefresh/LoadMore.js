@@ -153,7 +153,7 @@ LoadMore.defaultProps = {
     tips: ['正在加载...', '已无更多']
 };
 if (process.env.NODE_ENV !== 'production') {
-    LoadMore.PropTypes = {
+    LoadMore.propTypes = {
         // 初始时是否加载数据
         initLoad: PropTypes.bool,
         // 有没有下一页数据

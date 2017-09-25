@@ -164,7 +164,7 @@ Refresh.defaultProps = {
     tips: ['下拉刷新...', '松开更新...', '正在加载...']
 };
 if (process.env.NODE_ENV !== 'production') {
-    Refresh.PropTypes = {
+    Refresh.propTypes = {
         // 允许的误差
         threshold: PropTypes.oneOf([PropTypes.number, PropTypes.string]),
         // 下拉最大偏移量

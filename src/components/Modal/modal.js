@@ -214,7 +214,7 @@ Modal.defaultProps = {
     hasCloseBtn: true 
 };
 if (process.env.NODE_ENV !== 'production') {
-    Modal.PropTypes = {
+    Modal.propTypes = {
         // 是否是手机
         isMobile: PropTypes.bool,
         // 标题

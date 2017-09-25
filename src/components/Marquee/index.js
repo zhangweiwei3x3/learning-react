@@ -120,7 +120,7 @@ Marquee.defaultProps = {
     scrolldelay: 3000 // 滚动一条记录后的暂停时间
 };
 if (process.env.NODE_ENV !== 'production') {
-    Marquee.PropTypes = {
+    Marquee.propTypes = {
         scrollTime: PropTypes.number,
         scrolldelay: PropTypes.number
     };

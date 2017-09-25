@@ -198,7 +198,7 @@ Drag.defaultProps = {
     dragging: false // 是否正在拖拽
 };
 if (process.env.NODE_ENV !== 'production') {
-    Drag.PropTypes = {
+    Drag.propTypes = {
         // 栏目
         columns: PropTypes.array,
         // 数据

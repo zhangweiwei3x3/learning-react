@@ -91,7 +91,7 @@ Img.defaultProps = {
     initLoad: true // 初始化就加载图片
 };
 if (process.env.NODE_ENV !== 'production') {
-    Img.PropTypes = {
+    Img.propTypes = {
         className: PropTypes.string,
         // 图片 src
         src: PropTypes.string.isRequired,

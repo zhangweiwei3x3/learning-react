@@ -110,7 +110,7 @@ Dialog.defaultProps = {
     hasCloseBtn: false // 标题处是否有关闭按钮
 };
 if (process.env.NODE_ENV !== 'production') {
-    Dialog.PropTypes = {
+    Dialog.propTypes = {
         // 提示标题
         type: PropTypes.oneOf(['alert', 'confirm']),
         // 提示内容 string || node

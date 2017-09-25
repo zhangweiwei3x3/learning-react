@@ -190,7 +190,7 @@ ImgLazyLoadWrap.defaultProps = {
     offsetY: 0
 };
 if (process.env.NODE_ENV !== 'production') {
-    ImgLazyLoadWrap.PropTypes = {
+    ImgLazyLoadWrap.propTypes = {
         // 监听事件类型
         eventType: PropTypes.oneOf(['scroll', 'touchmove']),
          // 监听事件类型为 touchmove 时，需要再滚容器上加上这个 class

@@ -139,7 +139,7 @@ PullToRefresh.defaultProps = {
     loader: true
 };
 if (process.env.NODE_ENV !== 'production') {
-    PullToRefresh.PropTypes = {
+    PullToRefresh.propTypes = {
         // 是否有下拉刷新功能
         refresh: PropTypes.bool,
         // 是否有上拉加载功能
