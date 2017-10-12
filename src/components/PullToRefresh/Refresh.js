@@ -12,10 +12,11 @@
  *  onRefreshEnd: 下拉结束后的回调函数 onRefreshEnd(isSuccess) isSuccess 用于判断是成功还是失败
  */
 import './style.scss';
+import {PureComponent} from 'react';
+import PropTypes from 'prop-types';
 import {Util} from '../../libs/Util';
-const {Component, PropTypes} = React;
 
-export default class Refresh extends Component {
+export default class Refresh extends PureComponent {
     constructor(...args) {
         super(...args);
 
@@ -166,12 +167,12 @@ Refresh.defaultProps = {
 if (process.env.NODE_ENV !== 'production') {
     Refresh.propTypes = {
         // 允许的误差
-        threshold: PropTypes.oneOf([PropTypes.number, PropTypes.string]),
+        threshold: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         // 下拉最大偏移量
         // 下拉最大的距离 + this.height + offset
-        offset: PropTypes.oneOf([PropTypes.number, PropTypes.string]),
+        offset: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         // 动画执行时间
-        duration: PropTypes.oneOf([PropTypes.number, PropTypes.string]),
+        duration: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         // 下拉刷新的提示信息 ['下拉刷新...', '松开更新...', '正在加载...']
         tips: PropTypes.array,
         // 下拉刷新事件 promise 对象

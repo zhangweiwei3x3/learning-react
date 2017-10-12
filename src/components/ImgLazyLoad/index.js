@@ -11,16 +11,17 @@
  *  offsetY: 开始加载时的下边界值（string, number）
  *  
  */
+import {PureComponent} from 'react';
+import PropTypes from 'prop-types';
 import {Util, throttle} from '../../libs/Util';
 import Img from '../Img';
-const {Component, PropTypes} = React;
 const reqImg = require.context('../Img');
 
-export class ImgLazyLoad extends Component {
+export class ImgLazyLoad extends PureComponent {
     render() {
         const {className, src, type, scale, deafultImg, deafultImgName, isLazy, initLoad} = this.props;
 
-        return <Img src={src} type={type} scale={scale} deafultImg={deafultImg} deafultImgName={deafultImgName} isLazy={isLazy} initLoad={initLoad} data-src={src} className={(!initLoad ? ImgLazyLoad.class : '') + (className ? ' ' + className : '')} />;
+        return <Img src={src} type={type} scale={scale} deafultImg={deafultImg} deafultImgName={deafultImgName} isLazy={isLazy} initLoad={initLoad} refSrc={src} className={(!initLoad ? ImgLazyLoad.class : '') + (className ? ' ' + className : '')} />;
     }
 }
 ImgLazyLoad.class = 'img-lazy-load-' + Math.random().toString(36).slice(2, 5);
@@ -29,7 +30,7 @@ ImgLazyLoad.defaultProps = {
     initLoad: false // ImgLazyLoadWrap 自己加载 img 不需要在Img 组件里加载
 };
 
-export class ImgLazyLoadWrap extends Component {
+export class ImgLazyLoadWrap extends PureComponent {
     constructor(...args) {
         super(...args);
 
@@ -57,17 +58,17 @@ export class ImgLazyLoadWrap extends Component {
 
                 this.imgsRemove(img);
             }, () => {
-                let deafultImg = img.getAttribute('deafultImg'),
+                let deafultImg = img.dataset.deafultImg,
                     currentSrc;
 
                 if (deafultImg) {
                     currentSrc = deafultImg;
                 } else {
-                    let scale = img.getAttribute('scale'),
-                        deafultImgName = img.getAttribute('deafultImgName'),
-                        type = img.getAttribute('type'),
+                    let scale = img.dataset.scale,
+                        deafultImgName = img.dataset.deafultImgName,
+                        type = img.dataset.type,
                         currentSrcName = `./default-${scale ? scale.replace(':', 'x') : ''}${deafultImgName ? '-' + deafultImgName : ''}.${type}`;
-                    
+
                     currentSrc = reqImg(currentSrcName);
 
                     if (process.env.NODE_ENV !== 'production' && !currentSrc) {
@@ -176,7 +177,9 @@ export class ImgLazyLoadWrap extends Component {
     }
 
     render() {
-        return <div ref="lazyLoadWrap" {...this.props}>
+        const {className} = this.props;
+
+        return <div ref="lazyLoadWrap" className={`${className ? ' ' + className : ''}`}>
             {this.props.children}
         </div>;
     }
@@ -191,15 +194,16 @@ ImgLazyLoadWrap.defaultProps = {
 };
 if (process.env.NODE_ENV !== 'production') {
     ImgLazyLoadWrap.propTypes = {
+        className: PropTypes.string,
         // 监听事件类型
         eventType: PropTypes.oneOf(['scroll', 'touchmove']),
-         // 监听事件类型为 touchmove 时，需要再滚容器上加上这个 class
+        // 监听事件类型为 touchmove 时，需要再滚容器上加上这个 class
         touchmoveClass: PropTypes.string,
         // 滚动容器是否是 window
         isWinScroll: PropTypes.bool,
         // 开始加载时的左边界值
-        offsetX: PropTypes.oneOf([PropTypes.number, PropTypes.string]),
+        offsetX: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         // 开始加载时的下边界值
-        offsetY: PropTypes.oneOf([PropTypes.number, PropTypes.string])
+        offsetY: PropTypes.oneOfType([PropTypes.number, PropTypes.string])
     }; 
 }

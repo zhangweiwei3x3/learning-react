@@ -15,20 +15,20 @@
  *  initLoad: 初始化就加载图片（bool）
  *
  */
+import {PureComponent} from 'react';
+import PropTypes from 'prop-types';
 import {Util} from '../../libs/Util';
-const {Component, PropTypes} = React;
 const reqImg = require.context('./');
 
-export default class Img extends Component {
+export default class Img extends PureComponent {
     loadImg() {
         const {img} = this.refs;
         
-        Util.loadImg(img, this.props.src)
-            .then(() => {
-                img.classList.remove('img-load-before');
-            }, () => {
-                img.src = this.defaultImg;
-            });
+        Util.loadImg(img, this.props.src).then(() => {
+            img.classList.remove('img-load-before');
+        }, () => {
+            img.src = this.defaultImg;
+        });
     }
 
     componentDidMount() {
@@ -59,7 +59,7 @@ export default class Img extends Component {
     }
 
     render() {
-        const {className, isLazy, src, deafultImg, deafultImgName, scale, type} = this.props;
+        const {className, isLazy, src, refSrc, deafultImg, deafultImgName, scale, type} = this.props;
         let realClassName = `img${className ? ' ' + className : ''}`,
             currentSrc = src;
 
@@ -80,7 +80,12 @@ export default class Img extends Component {
             this.defaultImg = currentSrc;
         }
 
-        return <img ref="img" {...this.props} className={realClassName} src={currentSrc} />;
+        return <img ref="img" className={realClassName} src={currentSrc}
+            data-src={refSrc}
+            data-default-img-name={deafultImgName}
+            data-default-img={deafultImg}
+            data-scale={scale}
+            data-type={type} />;
     }
 }
 
@@ -95,6 +100,8 @@ if (process.env.NODE_ENV !== 'production') {
         className: PropTypes.string,
         // 图片 src
         src: PropTypes.string.isRequired,
+        // 图片 参考 src
+        refSrc: PropTypes.string,
         // 默认图片格式
         type: PropTypes.string,
         // 图片比例

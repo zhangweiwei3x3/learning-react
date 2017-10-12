@@ -2,9 +2,11 @@
  * anchor : zww
  * time   : 2016-10-14
  */
+import {PureComponent} from 'react';
+import {render} from 'react-dom';
 import {ImgLazyLoadWrap, ImgLazyLoad} from '../../../src/components/ImgLazyLoad';
 
-class App extends React.Component {
+class App extends PureComponent {
     componentDidMount() {
         const wrap = ReactDOM.findDOMNode(this.refs.ImgLazyLoadWrap),
             content = this.refs.content;
@@ -21,7 +23,7 @@ class App extends React.Component {
     }
 
     render() {
-        return <ImgLazyLoadWrap ref="ImgLazyLoadWrap" className="image-lazy-load img-lazy-load-wrap" offsetY="-100" eventType="touchmove" style={{overflow: 'hidden'}}>
+        return <ImgLazyLoadWrap ref="ImgLazyLoadWrap" className="image-lazy-load img-lazy-load-wrap" offsetY="-100" eventType="touchmove">
             <div ref="content">
                 <ImgLazyLoad src="http://img5.imgtn.bdimg.com/it/u=2438757233,2961043306&fm=21&gp=0.jpg" />
                 <ImgLazyLoad src="http://img5.imgtn.bdimg.com/it/u=2438757233,2961043306&fm=21&gp=0.jpg" />
@@ -98,4 +100,4 @@ class App extends React.Component {
     }
 }
 
-ReactDOM.render(<App />, document.getElementById('html-body'));
+render(<App />, document.getElementById('html-body'));

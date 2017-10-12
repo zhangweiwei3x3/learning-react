@@ -11,7 +11,8 @@
  *   onChange: 拖拽结束的回调函数 (func)
  *   
  */
-const {Component, PropTypes} = React;
+import {PureComponent} from 'react';
+import PropTypes from 'prop-types';
 
 // thead th
 const renderThs = (columns) => {
@@ -42,7 +43,7 @@ const renderRows = (data, columns) => {
     });
 };
 
-export default class Drag extends Component {
+export default class Drag extends PureComponent {
     constructor(...args) {
         super(...args);
 

@@ -13,31 +13,25 @@ var autoprefixer = require('autoprefixer');
 // html
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 
-var plugins = [];
-var htmlMinify = null;
-var loaders = ['babel', 'eslint-loader'];
-var env = 'development';
+var env = process.env.NODE_ENV; // 用于判断是开发环境（development）还是生产环境（production）
+var minify = {}; // HtmlWebpackPlugin 生产环境 压缩 这个是压缩 index.html 文件的
+var devtool = false;
+var loaders = [{
+    loader: 'babel-loader',
+    options: {
+        cacheDirectory: true,
+        plugins: ['transform-runtime', ['import', {libraryName: 'antd', style: true}]],
+        presets: ['es2015', 'react', 'stage-0']
+    }
+}];
+// 开发环境和生成环境不同的插件
+var buildPlugins = [];
+
 // bulid
-if (require('yargs').argv.e === 'prod') {
-    env = 'production';
-    loaders = ['babel'];
-    htmlMinify = {
-        collapseWhitespace: true, // 去除空格
-        removeStyleLinkTypeAttributes: true,
-        removeScriptTypeAttributes: true,
-        minifyCSS: true,
-        minifyJS: true,
-        html5: true
-    };
-    plugins.push(new webpack.DefinePlugin({
-        'process.env': {
-            'NODE_ENV': '"production"'
-        }
-    }));
-    // 模块去重
-    plugins.push(new webpack.optimize.DedupePlugin());
-    plugins.push(new webpack.optimize.UglifyJsPlugin({
-        sourceMap: false,
+if (env === 'production') {
+    // 压缩
+    buildPlugins.push(new webpack.optimize.UglifyJsPlugin({
+        sourceMap: true,
         compress: {
             sequences: true,
             dead_code: true,
@@ -53,60 +47,83 @@ if (require('yargs').argv.e === 'prod') {
             except: ['exports', 'require']
         }
     }));
+    minify = {
+        minifyJS: true,
+        collapseWhitespace: true,
+        removeComments: true
+    };
+
+// 开发环境
+} else {
+    devtool = 'source-map';
+    loaders.push('eslint-loader');
 }
+
 var webpackConfig = {
+    devtool: devtool,
     entry: {
         // 公用js打包合并
         lib: [
             'babel-polyfill',
             'whatwg-fetch',
             'react',
-            'react-dom',
-            'redux',
-            'react-redux',
-            'react-router'
+            'react-dom'
         ]
     },
     output: {
+        filename: env !== 'production' ? '[name].js' : '[name]-[chunkhash:6].js',
         path: packPath,
-        filename: '[name]/index.js',
         pathinfo: env !== 'production' // 合并文件中打印出打包的文件名称
     },
     module: {
-        loaders: [{
+        rules: [{
             test: /\.jsx?$/,
             exclude: /node_modules/,
-            loaders: loaders
+            use: loaders
         }, {
             test: /\.s?css$/,
             exclude: /(node_modules)/,
-            loader: ExtractTextPlugin.extract('style', 'css!postcss!sass?outputStyle=expanded')
+            use: ExtractTextPlugin.extract({
+                fallback: 'style-loader',
+                use: ['css-loader', {
+                    loader: 'postcss-loader',
+                    options: {
+                        plugins: () => {
+                            return [require('postcss-import')(), autoprefixer({
+                                browsers: ['> 0%', 'last 2 versions']
+                            })];
+                        }
+                    }
+                }, 'sass-loader']
+            })
         }, {
             test: /\.(png|jpg|jpeg|gif)$/,
             exclude: /node_modules/,
             // 8192 = 1024 * 8 小于等于8k的转换成 base64
-            loader: 'url',
-            query: {
-                limit: 8192,
-                name: env !== 'production' ? './src/img/[name].[ext]' : './src/img/[name]-[hash:6].[ext]'
-            }
+            use: [{
+                loader: 'url-loader',
+                options: {
+                    // 8192 = 1024 * 8 小于等于8k的转换成 base64
+                    limit: 8192,
+                    name: env !== 'production' ? './src/img/[name].[ext]' : './src/img/[name]-[hash:6].[ext]'
+                }
+            }]
         }, {
             test: /\.(woff|svg|eot|ttf)$/,
             exclude: /node_modules/,
-            loader: 'url',
-            query: {
-                limit: 10240,
-                name: env !== 'production' ? './src/font/[name].[ext]' : './src/font/[name]-[hash:6].[ext]'
-            }
+            use: [{
+                loader: 'url-loader',
+                options: {
+                    limit: 10240,
+                    name: env !== 'production' ? './src/font/[name].[ext]' : './src/font/[name]-[hash:6].[ext]'
+                }
+            }]
         }]
     },
-    postcss: [autoprefixer({
-        browsers: ['> 0%', 'last 2 versions']
-    }), px2rem({
-        remUnit: 37.5, // iphone 6s 的默认设计稿
-        baseDpr: 1 // 默认dpr 1
-    })],
     plugins: [
+        new webpack.DefinePlugin({
+            'process.env.NODE_ENV': JSON.stringify(env)
+        }),
         // 清空
         new CleanWebpackPlugin(packPath, {
             root: __dirname,
@@ -116,15 +133,19 @@ var webpackConfig = {
         // 变成全局变量，不用require了
         new webpack.ProvidePlugin({
             React: 'react',
-            ReactDOM: 'react-dom',
-            Redux: 'redux',
-            ReactRedux: 'react-redux',
-            ReactRouter: 'react-router'
+            ReactDOM: 'react-dom'
         }),
-        new ExtractTextPlugin('[name]/style.css', {allChunks: true}),
+        new ExtractTextPlugin({
+            filename: env !== 'production' ? '[name].css' : '[name]-[contenthash:6].css', 
+            allChunks: true
+        }),
         // improt lib（entry.lib） 中的插件不会在其他地方加载
-        new webpack.optimize.CommonsChunkPlugin('lib', 'lib.js', Infinity),
-        ...plugins
+        new webpack.optimize.CommonsChunkPlugin({
+            name: 'lib',
+            filename: env !== 'production' ? 'lib.js' : 'lib-[chunkhash:6].js',
+            minChunks: Infinity
+        }),
+        ...buildPlugins
     ]
 };
 
@@ -161,11 +182,18 @@ Object.keys(entries).forEach((name) => {
         filename: name + '/index.html',
         template: `./examples/${name}/index.html`,
         inject: true,
-        chunks: ['lib', name]
+        chunks: ['lib', name],
+        chunksSortMode: (chunk1, chunk2) => {
+            var order = ['lib'];
+            var order1 = order.indexOf(chunk1.names[0]);
+            var order2 = order.indexOf(chunk2.names[0]);
+
+            return order2 - order1;  
+        }
     };
     
-    if (htmlMinify) {
-        option.minify = htmlMinify;
+    if (minify) {
+        option.minify = minify;
     }
     
     // 每个页面生成一个html

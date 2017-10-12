@@ -23,11 +23,12 @@
  *     onCancel: 点击取消按钮的回调函数（func）
  */
 import './style.scss';
+import {PureComponent} from 'react';
+import PropTypes from 'prop-types';
+import {render} from 'react-dom';
 import Modal from '../Modal';
-const {Component, PropTypes} = React;
-const {render} = ReactDOM;
 
-class Dialog extends Component {
+class Dialog extends PureComponent {
     constructor(...args) {
         super(...args);
 

@@ -16,10 +16,11 @@
  *  closeCallback: 弹窗关闭后的回调（func）
  *  onCancel: 点击确认按钮的回调（func）
  */
+import {PureComponent} from 'react';
+import ReactDOM from 'react-dom';
 import Modal from './modal';
-const {Component} = React;
 
-export default class extends Component {
+export default class extends PureComponent {
     appendMaskIntoDoc() {
         ReactDOM.unstable_renderSubtreeIntoContainer(
             this,

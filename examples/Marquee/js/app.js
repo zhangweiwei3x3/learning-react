@@ -2,9 +2,11 @@
  * anchor : zww
  * time   : 2016-10-11
  */
+import {PureComponent} from 'react';
+import {render} from 'react-dom';
 import Marquee from '../../../src/components/Marquee';
 
-class App extends React.Component {
+class App extends PureComponent {
     render() {
         return <Marquee>
             <p>11111111</p>
@@ -17,4 +19,4 @@ class App extends React.Component {
     }
 }
 
-ReactDOM.render(<App />, document.getElementById('html-body'));
+render(<App />, document.getElementById('html-body'));

@@ -17,10 +17,11 @@
  *  onCancel: 点击确认按钮的回调（func）
  */
 import './style.scss';
+import {PureComponent} from 'react';
+import PropTypes from 'prop-types';
 import {Util, throttle} from '../../libs/Util';
-const {Component, PropTypes} = React;
 
-class Modal extends Component {
+class Modal extends PureComponent {
     constructor(...args) {
         super(...args);
 

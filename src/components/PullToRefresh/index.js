@@ -21,13 +21,14 @@
  * 
  */
 import './style.scss';
+import {PureComponent} from 'react';
+import PropTypes from 'prop-types';
+import {findDOMNode} from 'react-dom';
 import {Util} from '../../libs/Util';
 import Refresh from './Refresh';
 import LoadMore from './LoadMore';
-const {Component, PropTypes} = React;
-const {findDOMNode} = ReactDOM;
 
-export default class PullToRefresh extends Component {
+export default class PullToRefresh extends PureComponent {
     constructor(...args) {
         super(...args);
 
@@ -106,6 +107,8 @@ export default class PullToRefresh extends Component {
             initLoad, hasNext, isFill, offsetLoadMore, tipsLoadMore,
             children, refresh, loader, className
         } = this.props;
+        
+        console.log(11111111, this.props);
 
         return <div className={`pull-to-refresh${className ? ' ' + className : ''}`}>
             {

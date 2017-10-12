@@ -14,10 +14,11 @@
  * 
  */
 import './style.scss';
+import {PureComponent} from 'react';
+import PropTypes from 'prop-types';
 import {Util} from '../../libs/Util';
-const {Component, PropTypes} = React;
 
-export default class LoadMore extends Component {
+export default class LoadMore extends PureComponent {
     constructor(...args) {
         super(...args);
 
@@ -161,7 +162,7 @@ if (process.env.NODE_ENV !== 'production') {
         // 未满屏是否加载数据
         isFill: PropTypes.bool,
         // 距离底部多长距离开始加载
-        offset: PropTypes.oneOf([PropTypes.number, PropTypes.string]),
+        offset: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         // 上拉加载的提示信息 ['正在加载...', '已无更多']
         tips: PropTypes.array,
         // 加载函数 promise 对象

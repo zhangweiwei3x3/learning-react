@@ -2,6 +2,7 @@
  * anchor : zww
  * time   : 2016-10-10
  */
+import {PureComponent} from 'react';
 import {openAlert, openConfirm} from '../../../src/components/Dialog';
 
 let div = document.createElement('div'),
@@ -13,11 +14,12 @@ for (let i = 0; i < 1000; i++) {
 div.innerHTML = html;
 document.body.appendChild(div);
 
-class App extends React.Component {
+class App extends PureComponent {
     render() {
         return <div>react Component test</div>;
     }
 }
+
 openAlert({
     title: 'alert-title',
     className: 'alert-test222',

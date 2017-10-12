@@ -9,10 +9,11 @@
  *
  */
 import './style.scss';
+import {PureComponent} from 'react';
+import PropTypes from 'prop-types';
 import {Util} from '../../libs/Util';
-const {Component, PropTypes} = React;
 
-class Marquee extends Component {
+class Marquee extends PureComponent {
     constructor(...args) {
         super(...args);
 

@@ -2,6 +2,8 @@
  * anchor : zww
  * time   : 2016-10-14
  */
+import {PureComponent} from 'react';
+import {render} from 'react-dom';
 import PullToRefresh from '../../../src/components/PullToRefresh/';
 
 const initData = [];
@@ -10,7 +12,7 @@ for (let i = 0; i < 10; i++) {
     initData.push((i + '').repeat(10));
 }
 
-class App extends React.Component {
+class App extends PureComponent {
     constructor(...args) {
         super(...args);
 
@@ -84,4 +86,4 @@ class App extends React.Component {
     }
 }
 
-ReactDOM.render(<App />, document.getElementById('html-body'));
+render(<App />, document.getElementById('html-body'));

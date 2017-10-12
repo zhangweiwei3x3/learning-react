@@ -2,9 +2,11 @@
  * anchor : zww
  * time   : 2016-09-06
  */
+import {PureComponent} from 'react';
+import {render} from 'react-dom';
 import Drag from '../../../src/components/Drag';
 
-class SelectSort extends React.Component {
+class SelectSort extends PureComponent {
     constructor(...args) {
         super(...args);
 
@@ -64,12 +66,10 @@ class SelectSort extends React.Component {
     render() {
         const columns = this.props.columns;
 
-        return (
-            <div>
-                <Drag columns={columns} data={this.state.data1} dragging={this.state.dragging2} dragStart={this.dragStart1.bind(this)} onChange={this.change1.bind(this)} />
-                <Drag columns={columns} data={this.state.data2} dragging={this.state.dragging1} dragStart={this.dragStart2.bind(this)} onChange={this.change2.bind(this)} />
-            </div>
-        );
+        return <div>
+            <Drag columns={columns} data={this.state.data1} dragging={this.state.dragging2} dragStart={this.dragStart1.bind(this)} onChange={this.change1.bind(this)} />
+            <Drag columns={columns} data={this.state.data2} dragging={this.state.dragging1} dragStart={this.dragStart2.bind(this)} onChange={this.change2.bind(this)} />
+        </div>;
     }
 }
 
@@ -111,7 +111,7 @@ function change(data) {
     console.log(111111111, data);
 }
 
-ReactDOM.render(<Drag columns={columns} data={data} onChange={change} />, document.getElementById('html-body'));
+render(<Drag columns={columns} data={data} onChange={change} />, document.getElementById('html-body'));
 
 const data1 = [
     {
@@ -172,4 +172,4 @@ const data2 = [
 function change2(data1, data2) {
     console.log(22222, data1, data2);
 }
-ReactDOM.render(<SelectSort columns={columns} data1={data1} data2={data2} onChange={change2} />, document.getElementById('html-body2'));
+render(<SelectSort columns={columns} data1={data1} data2={data2} onChange={change2} />, document.getElementById('html-body2'));

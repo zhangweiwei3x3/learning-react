@@ -28,10 +28,7 @@
         "Symbol": true,
         "Set": true,
         "React": true,
-        "ReactDOM": true,
-        "Redux": true,
-        "ReactRedux": true,
-        "ReactRouter": true
+        "ReactDOM": true
     },
     # 规则
     "rules": {
