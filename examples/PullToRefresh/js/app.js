@@ -13,8 +13,8 @@ for (let i = 0; i < 10; i++) {
 }
 
 class App extends PureComponent {
-    constructor(...args) {
-        super(...args);
+    constructor(props) {
+        super(props);
 
         this.state = {
             pageNo: 2,

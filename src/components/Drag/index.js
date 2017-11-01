@@ -44,8 +44,8 @@ const renderRows = (data, columns) => {
 };
 
 export default class Drag extends PureComponent {
-    constructor(...args) {
-        super(...args);
+    constructor(props) {
+        super(props);
 
         this.dragging = false;
         this.state = {

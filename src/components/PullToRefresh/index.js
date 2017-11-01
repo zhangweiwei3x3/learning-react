@@ -29,8 +29,8 @@ import Refresh from './Refresh';
 import LoadMore from './LoadMore';
 
 export default class PullToRefresh extends PureComponent {
-    constructor(...args) {
-        super(...args);
+    constructor(props) {
+        super(props);
 
         this.isLoading = false;
         this.isRefreshing = false;

@@ -7,8 +7,8 @@ import {render} from 'react-dom';
 import Modal from '../../../src/components/Modal';
 
 class App extends PureComponent {
-    constructor(...args) {
-        super(...args);
+    constructor(props) {
+        super(props);
 
         this.state = {
             visiable: false

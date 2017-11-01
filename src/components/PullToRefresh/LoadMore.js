@@ -19,8 +19,8 @@ import PropTypes from 'prop-types';
 import {Util} from '../../libs/Util';
 
 export default class LoadMore extends PureComponent {
-    constructor(...args) {
-        super(...args);
+    constructor(props) {
+        super(props);
 
         this.loading = false;
         this.domUpdate = false;

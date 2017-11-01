@@ -29,8 +29,8 @@ import {render} from 'react-dom';
 import Modal from '../Modal';
 
 class Dialog extends PureComponent {
-    constructor(...args) {
-        super(...args);
+    constructor(props) {
+        super(props);
 
         this.state = {
             visiable: true

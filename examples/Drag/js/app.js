@@ -7,8 +7,8 @@ import {render} from 'react-dom';
 import Drag from '../../../src/components/Drag';
 
 class SelectSort extends PureComponent {
-    constructor(...args) {
-        super(...args);
+    constructor(props) {
+        super(props);
 
         this.state = {
             dragging1: false,

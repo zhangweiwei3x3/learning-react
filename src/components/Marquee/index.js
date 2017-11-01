@@ -14,8 +14,8 @@ import PropTypes from 'prop-types';
 import {Util} from '../../libs/Util';
 
 class Marquee extends PureComponent {
-    constructor(...args) {
-        super(...args);
+    constructor(props) {
+        super(props);
 
         this.transform = Util.vendorPropName('transform');
         this.transition = Util.vendorPropName('transition');

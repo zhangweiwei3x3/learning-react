@@ -17,8 +17,8 @@ import PropTypes from 'prop-types';
 import {Util} from '../../libs/Util';
 
 export default class Refresh extends PureComponent {
-    constructor(...args) {
-        super(...args);
+    constructor(props) {
+        super(props);
 
         this.state = {
             // 当前是什么状态

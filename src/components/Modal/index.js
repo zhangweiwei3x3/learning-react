@@ -23,8 +23,8 @@ import {createPortal} from 'react-dom';
 import {Util, throttle} from '../../libs/Util';
 
 class Modal extends PureComponent {
-    constructor(...args) {
-        super(...args);
+    constructor(props) {
+        super(props);
 
         this.isFirst = true; // 第一次显示时再渲染
         this.transitionEnd = this.transitionEnd.bind(this);

@@ -31,8 +31,8 @@ ImgLazyLoad.defaultProps = {
 };
 
 export class ImgLazyLoadWrap extends PureComponent {
-    constructor(...args) {
-        super(...args);
+    constructor(props) {
+        super(props);
 
         this.resizeEvent = throttle(this.resizeEvent.bind(this));
         this.lazyLoad = throttle(this.lazyLoad.bind(this));
