@@ -27,7 +27,7 @@ export default class Refresh extends PureComponent {
         };
         // tips 只有一个 全部都一样 [下拉刷新] -> [下拉刷新, 下拉刷新, 下拉刷新]
         // tips 有两个 [下拉刷新, 正在加载] -> [下拉刷新, 下拉刷新, 正在加载]
-        const {tips, threshold, duration} = this.props,
+        const {tips, threshold, duration} = props,
             length = tips.length;
 
         if (length === 1) {

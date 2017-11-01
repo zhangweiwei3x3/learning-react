@@ -29,7 +29,7 @@ class Modal extends PureComponent {
         this.isFirst = true; // 第一次显示时再渲染
         this.transitionEnd = this.transitionEnd.bind(this);
 
-        this.isMobile = typeof this.props.isMobile !== 'undefined' ? this.props.isMobile : Util.isMobile();
+        this.isMobile = typeof props.isMobile !== 'undefined' ? props.isMobile : Util.isMobile();
         if (!this.isMobile) {
             this.isFirstShow = true; // 第一是显示，需要调整对话框的top值
 
