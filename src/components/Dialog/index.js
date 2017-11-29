@@ -80,7 +80,7 @@ class Dialog extends PureComponent {
 
             case 'confirm': 
                 return [
-                    <button onClick={this.onCancel}>关闭</button>,
+                    <button onClick={this.onCancel}>取消</button>,
                     <button onClick={this.onOk}>确定</button>
                 ];
         }
