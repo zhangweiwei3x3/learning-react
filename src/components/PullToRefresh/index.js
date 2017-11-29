@@ -107,8 +107,6 @@ export default class PullToRefresh extends PureComponent {
             initLoad, hasNext, isFill, offsetLoadMore, tipsLoadMore,
             children, refresh, loader, className
         } = this.props;
-        
-        console.log(11111111, this.props);
 
         return <div className={`pull-to-refresh${className ? ' ' + className : ''}`}>
             {

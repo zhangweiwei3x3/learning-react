@@ -156,7 +156,7 @@ function unmountComponentAtNode(container) {
  */
 export const openAlert = (option) => {
     let div = document.createElement('div'),
-        {className, closeCallback} = option.className;
+        {className, closeCallback} = option;
 
     option.type = 'alert';
     option.visiable = true;
@@ -187,7 +187,7 @@ export const openAlert = (option) => {
  */
 export const openConfirm = (option) => {
     let div = document.createElement('div'),
-        {className, closeCallback} = option.className;
+        {className, closeCallback} = option;
 
     option.type = 'confirm';
     option.visiable = true;
