@@ -25,7 +25,6 @@ export default class LoadMore extends PureComponent {
         this.loading = false;
         this.domUpdate = false;
         this.hasRemoveScrollEvent = false; // 用于判断是否已经取消监听scroll函数
-        this.hasScroll = false; // 是否滚动加载过，只有 true 时，才显示 tips[1]
         this.scroll = this.scroll.bind(this);
     }
 
@@ -63,7 +62,6 @@ export default class LoadMore extends PureComponent {
 
         if (scrollTop + this.clientHeight + this.offset >= scrollHeight) {
             this.load();
-            this.hasScroll = true;
         }
     }
 
@@ -141,7 +139,7 @@ export default class LoadMore extends PureComponent {
 
         return <div ref="loadMore" className={`load-more${className ? ' ' + className : ''}`}>
             <div ref="loadMoreContent" className="load-more-content">{children}</div>
-            <div ref="loadMoreTips" className={`load-more-tips${hasNext ? '' : ' no-more'}`}>{hasNext ? tips[0] : this.hasScroll && tips[1]}</div>
+            <div ref="loadMoreTips" className={`load-more-tips${hasNext ? '' : ' no-more'}`}>{hasNext ? tips[0] : tips[1]}</div>
         </div>;
     }
 }
