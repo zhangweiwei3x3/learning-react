@@ -132,8 +132,7 @@ var webpackConfig = {
         }),
         // 变成全局变量，不用require了
         new webpack.ProvidePlugin({
-            React: 'react',
-            ReactDOM: 'react-dom'
+            React: 'react'
         }),
         new ExtractTextPlugin({
             filename: env !== 'production' ? '[name].css' : '[name]-[contenthash:6].css', 

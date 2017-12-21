@@ -23,9 +23,9 @@
  *     onCancel: 点击取消按钮的回调函数（func）
  */
 import './style.scss';
+import ReactDOM, {render} from 'react-dom';
 import {PureComponent} from 'react';
 import PropTypes from 'prop-types';
-import {render} from 'react-dom';
 import Modal from '../Modal';
 
 class Dialog extends PureComponent {
