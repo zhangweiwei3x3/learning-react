@@ -76,8 +76,9 @@ export default class PullToRefresh extends PureComponent {
         if (this.isRefreshed) {
             this.isRefreshing = false;
             let {loadMore} = this.refs;
+            let {isFill, hasNext} = this.props;
 
-            if (!loadMore || !this.props.hasNext) {
+            if (!isFill || !hasNext || !loadMore) {
                 return;
             }
             if (!this.scrollPaneDOM) {
