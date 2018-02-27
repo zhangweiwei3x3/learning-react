@@ -3,7 +3,8 @@
 "warn" === 1
 "error" === 2
 */
-{
+
+module.exports = {
     // 解析器
     "parser": "babel-eslint",
     // 环境
@@ -25,7 +26,6 @@
     // 全局变量
     // new webpack.ProvidePlugin
     "globals": {
-        "Set": true,
         "require": true,
         "process": true,
         "Symbol": true,
@@ -177,4 +177,4 @@
         "react/no-find-dom-node": 0,
         "react/jsx-space-before-closing": [1, "always"]
     }
-}
+};
