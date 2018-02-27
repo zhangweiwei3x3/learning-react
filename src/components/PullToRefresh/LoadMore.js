@@ -72,29 +72,28 @@ export default class LoadMore extends PureComponent {
         }
         const {isFill, hasNext} = this.props;
 
-        if (isFill && hasNext && this.clientHeight > Util.getStyle(this.refs.loadMoreContent, 'height', true)) {
+        if (isFill && hasNext && this.clientHeight > Util.getStyle(this.loadMoreContent, 'height', true)) {
             this.load();
         }
     }
 
     componentDidMount() {
-        this.scrollPane = Util.getScrollPane(this.refs.loadMore);
+        this.scrollPane = Util.getScrollPane(this.loadMore);
         this.scrollPaneDOM = this.scrollPane;
         if (this.scrollPaneDOM === window) {
             this.scrollPaneDOM = document.body;
         }
         this.clientHeight = this.scrollPaneDOM.clientHeight;
         const {offset, initLoad} = this.props, 
-            {loadMoreTips} = this.refs,
-            img = loadMoreTips.getElementsByTagName('img')[0];
+            img = this.loadMoreTips.getElementsByTagName('img')[0];
 
         // 上拉加载的提示信息 如果是图片
         if (img) {
             img.onload = () => {
-                this.offset = Util.getStyle(loadMoreTips, 'height', true) + offset;
+                this.offset = Util.getStyle(this.loadMoreTips, 'height', true) + offset;
             };
         }
-        this.offset = Util.getStyle(loadMoreTips, 'height', true) + offset;
+        this.offset = Util.getStyle(this.loadMoreTips, 'height', true) + offset;
         this.scrollPane.addEventListener('scroll', this.scroll, false);
 
         if (initLoad) {
@@ -137,9 +136,9 @@ export default class LoadMore extends PureComponent {
     render() {
         const {className, children, hasNext, tips} = this.props;
 
-        return <div ref="loadMore" className={`load-more${className ? ' ' + className : ''}`}>
-            <div ref="loadMoreContent" className="load-more-content">{children}</div>
-            <div ref="loadMoreTips" className={`load-more-tips${hasNext ? '' : ' no-more'}`}>{hasNext ? tips[0] : tips[1]}</div>
+        return <div ref={(e) => {this.loadMore = e;}} className={`load-more${className ? ' ' + className : ''}`}>
+            <div ref={(e) => {this.loadMoreContent = e;}} className="load-more-content">{children}</div>
+            <div ref={(e) => {this.loadMoreTips = e;}} className={`load-more-tips${hasNext ? '' : ' no-more'}`}>{hasNext ? tips[0] : tips[1]}</div>
         </div>;
     }
 }

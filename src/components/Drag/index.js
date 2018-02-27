@@ -55,7 +55,7 @@ export default class Drag extends PureComponent {
 
     // 获取 tbody 下的 tr 元素
     isDisabled(elem) {
-        const tableWrap = this.refs.tableWrap;
+        const tableWrap = this.tableWrap;
 
         while (elem.nodeName !== 'TR') {
             if (elem === tableWrap) {
@@ -74,7 +74,7 @@ export default class Drag extends PureComponent {
 
     // 获取元素的位置 下标
     getIndex(elem) {
-        const tableWrap = this.refs.tableWrap;
+        const tableWrap = this.tableWrap;
         var index = -1;
 
         while (elem.nodeName !== 'TR') {
@@ -174,7 +174,7 @@ export default class Drag extends PureComponent {
         const columns = this.props.columns,
             data = this.state.data;
 
-        return <div ref="tableWrap" className="table" onDragStart={this.dragStart.bind(this)} onDragOver={this.dragover.bind(this)} onDrop={this.drop.bind(this)}>
+        return <div ref={(e) => {this.tableWrap = e;}} className="table" onDragStart={this.dragStart.bind(this)} onDragOver={this.dragover.bind(this)} onDrop={this.drop.bind(this)}>
             <table className="table table-striped">
                 {
                     columns[0].displayName && (

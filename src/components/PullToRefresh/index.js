@@ -75,19 +75,17 @@ export default class PullToRefresh extends PureComponent {
     componentDidUpdate() {
         if (this.isRefreshed) {
             this.isRefreshing = false;
-            let {loadMore} = this.refs;
             let {isFill, hasNext} = this.props;
 
-            if (!isFill || !hasNext || !loadMore) {
+            if (!isFill || !hasNext || !this.loadMore) {
                 return;
             }
             if (!this.scrollPaneDOM) {
-                loadMore = findDOMNode(loadMore);
-                this.scrollPaneDOM = Util.getScrollPane(loadMore);
+                this.scrollPaneDOM = Util.getScrollPane(this.loadMore);
                 if (this.scrollPaneDOM === window) {
                     this.scrollPaneDOM = document.body;
                 }
-                this.loadMoreContent = loadMore.querySelector('.load-more-content');
+                this.loadMoreContent = this.loadMore.querySelector('.load-more-content');
             }
 
             if (!this.scrollPaneDOMHeight) {
@@ -121,7 +119,7 @@ export default class PullToRefresh extends PureComponent {
             }
             {
                 loader ? <LoadMore
-                    ref="loadMore"
+                    ref={(e) => {this.loadMore = findDOMNode(e);}}
                     initLoad={initLoad}
                     hasNext={hasNext}
                     isFill={isFill}

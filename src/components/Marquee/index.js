@@ -33,8 +33,8 @@ class Marquee extends PureComponent {
     }
 
     scroll(scrollTime, scrollDistance) {
-        this.refs.marqueeContent.style[this.transition] = scrollTime + 'ms';
-        this.refs.marqueeContent.style[this.transform] = `translate3d(0px, ${scrollDistance}px, 0px)`;
+        this.marqueeContent.style[this.transition] = scrollTime + 'ms';
+        this.marqueeContent.style[this.transform] = `translate3d(0px, ${scrollDistance}px, 0px)`;
     }
 
     // transition 动画结束后事件
@@ -54,7 +54,7 @@ class Marquee extends PureComponent {
         if (this.timer) {
             clearTimeout(this.timer);
             this.detachTransition();
-            this.refs.marqueeContent.removeAttribute('style');
+            this.marqueeContent.removeAttribute('style');
         }
 
         if (!children || !children.length || children.length < 2) {
@@ -85,15 +85,15 @@ class Marquee extends PureComponent {
     }
 
     attachTransition() {
-        this.refs.marqueeContent.addEventListener(Util.getTransitionEndEvent(), this.transitionEnd, false);
+        this.marqueeContent.addEventListener(Util.getTransitionEndEvent(), this.transitionEnd, false);
     }
 
     detachTransition() {
-        this.refs.marqueeContent.removeEventListener(Util.getTransitionEndEvent(), this.transitionEnd, false);
+        this.marqueeContent.removeEventListener(Util.getTransitionEndEvent(), this.transitionEnd, false);
     }
 
     componentDidMount() {
-        this.scrollDistance = parseFloat(Util.getStyle(this.refs.marquee, 'height'));
+        this.scrollDistance = parseFloat(Util.getStyle(this.marquee, 'height'));
 
         this.init();
     }
@@ -106,8 +106,8 @@ class Marquee extends PureComponent {
     }
 
     render() {
-        return <div ref="marquee" className="marquee">
-            <div ref="marqueeContent" className="marquee-content">
+        return <div ref={(e) => {this.marquee = e;}} className="marquee">
+            <div ref={(e) => {this.marqueeContent = e;}} className="marquee-content">
                 {
                     this._renderChild()
                 }

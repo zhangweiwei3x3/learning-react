@@ -114,11 +114,10 @@ export default class Refresh extends PureComponent {
     }
 
     componentDidMount() {
-        let {refresh} = this.refs,
-            img = refresh.getElementsByTagName('img')[0];
+        let img = this.refresh.getElementsByTagName('img')[0];
 
-        this.touchParent = refresh.parentNode;
-        this.scrollParent = Util.getScrollPane(refresh);
+        this.touchParent = this.refresh.parentNode;
+        this.scrollParent = Util.getScrollPane(this.refresh);
         if (this.scrollParent === window) {
             this.scrollParent = document.body;
         }
@@ -129,13 +128,13 @@ export default class Refresh extends PureComponent {
         // 下拉刷新的提示信息 如果是图片
         if (img) {
             img.onload = () => {
-                this.height = Util.getStyle(refresh, 'height', true);
-                refresh.style.top = -this.height + 'px';
+                this.height = Util.getStyle(this.refresh, 'height', true);
+                this.refresh.style.top = -this.height + 'px';
                 this.maxMove = +this.props.offset + this.height;
             };
         }
-        this.height = Util.getStyle(refresh, 'height', true);
-        refresh.style.top = -this.height + 'px';
+        this.height = Util.getStyle(this.refresh, 'height', true);
+        this.refresh.style.top = -this.height + 'px';
         this.maxMove = +this.props.offset + this.height;
     }
 
@@ -152,7 +151,7 @@ export default class Refresh extends PureComponent {
         const {className} = this.props,
             {status} = this.state;
 
-        return <div ref="refresh" className={`refresh step${status + 1}${className ? ' ' + className : ''}`}>
+        return <div ref={(e) => {this.refresh = e;}} className={`refresh step${status + 1}${className ? ' ' + className : ''}`}>
             {this.tips[status]}
         </div>;
     }

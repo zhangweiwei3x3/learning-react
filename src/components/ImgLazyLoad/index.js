@@ -114,13 +114,13 @@ export class ImgLazyLoadWrap extends PureComponent {
         } else {
             // scroll
             if (this.props.eventType === 'scroll') {
-                this.target = Util.getScrollParent(this.refs.lazyLoadWrap);
+                this.target = Util.getScrollParent(this.lazyLoadWrap);
                 
             // touchmove
             } else {
                 const {touchmoveClass} = this.props;
 
-                this.target = this.refs.lazyLoadWrap;
+                this.target = this.lazyLoadWrap;
                 while (true) {
                     if (this.target.nodeName === '#document') {
                         this.target = window;
@@ -158,14 +158,14 @@ export class ImgLazyLoadWrap extends PureComponent {
     }
 
     componentDidMount() {
-        this.imgs = Array.from(this.refs.lazyLoadWrap.querySelectorAll('.' + ImgLazyLoad.class));
+        this.imgs = Array.from(this.lazyLoadWrap.querySelectorAll('.' + ImgLazyLoad.class));
         this.init();
         this.attachEvent();
         this.lazyLoad();
     }
 
     componentDidUpdate() {
-        this.imgs = Array.from(this.refs.lazyLoadWrap.querySelectorAll('.' + ImgLazyLoad.class)).filter((item) => {
+        this.imgs = Array.from(this.lazyLoadWrap.querySelectorAll('.' + ImgLazyLoad.class)).filter((item) => {
             return item.src !== item.dataset.src;
         });
         this.lazyLoad();
@@ -179,7 +179,7 @@ export class ImgLazyLoadWrap extends PureComponent {
     render() {
         const {className} = this.props;
 
-        return <div ref="lazyLoadWrap" className={`${className ? ' ' + className : ''}`}>
+        return <div ref={(e) => {this.lazyLoadWrap = e;}} className={`${className ? ' ' + className : ''}`}>
             {this.props.children}
         </div>;
     }

@@ -22,12 +22,10 @@ const reqImg = require.context('./');
 
 export default class Img extends PureComponent {
     loadImg() {
-        const {img} = this.refs;
-        
-        Util.loadImg(img, this.props.src).then(() => {
-            img.classList.remove('img-load-before');
+        Util.loadImg(this.img, this.props.src).then(() => {
+            this.img.classList.remove('img-load-before');
         }, () => {
-            img.src = this.defaultImg;
+            this.img.src = this.defaultImg;
         });
     }
 
@@ -35,11 +33,11 @@ export default class Img extends PureComponent {
         const {isLazy, initLoad, scale} = this.props;
         const scaleXY = scale.split(':');
 
-        this.width = parseFloat(Util.getStyle(this.refs.img, 'width'));
+        this.width = parseFloat(Util.getStyle(this.img, 'width'));
 
         if (this.width) {
             this.height = this.width * scaleXY[1] / scaleXY[0];
-            this.refs.img.style.height = this.height + 'px';
+            this.img.style.height = this.height + 'px';
         } else {
             this.width = window.innerWidth || 640;
             this.height = this.width * scaleXY[1] / scaleXY[0];
@@ -80,7 +78,7 @@ export default class Img extends PureComponent {
             this.defaultImg = currentSrc;
         }
 
-        return <img ref="img" className={realClassName} src={currentSrc}
+        return <img ref={(e) => {this.img = e;}} className={realClassName} src={currentSrc}
             data-src={refSrc}
             data-default-img-name={deafultImgName}
             data-default-img={deafultImg}

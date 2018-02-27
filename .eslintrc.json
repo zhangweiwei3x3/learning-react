@@ -1,16 +1,19 @@
-# "off" === 0
-# "warn" === 1
-# "error" === 2
-
+/*
+"off" === 0
+"warn" === 1
+"error" === 2
+*/
 {
-    # 解析器
+    // 解析器
     "parser": "babel-eslint",
-    # 环境
+    // 环境
     "env" :{
-        "browser": true
+        "commonjs": true,
+        "browser": true,
+        "node": true
     },
-    "extends": "eslint:recommended",
-    # 插件
+    "extends": ["eslint:recommended", "plugin:react/recommended"],
+    // 插件
     "plugins": [
         "react"
     ],
@@ -19,20 +22,20 @@
             "jsx": true
         }
     },
-    # 全局变量
-    # new webpack.ProvidePlugin
+    // 全局变量
+    // new webpack.ProvidePlugin
     "globals": {
-        "Promise": true,
+        "Set": true,
         "require": true,
         "process": true,
         "Symbol": true,
-        "Set": true,
-        "React": true,
-        "ReactDOM": true
+        "module": true,
+        "Promise": true,
+        "React": true
     },
-    # 规则
+    // 规则
     "rules": {
-        ### 可能的代码错误 ###
+        // 可能的代码错误
         "no-cond-assign": 2,
         "no-console": 0,
         "no-constant-condition": [2, {"checkLoops": false}],
@@ -61,7 +64,7 @@
         "valid-typeof": 2,
 
 
-        ### 代码优化 ###
+        // 代码优化
         "curly": 1,
         "dot-notation": 1,
         "no-caller": 1,
@@ -93,17 +96,17 @@
         "radix": 1,
 
 
-        ### 变量 ###
+        // 变量
         "no-delete-var": 1,
         "no-label-var": 1,
         "no-shadow-restricted-names": 1,
         "no-undef-init": 1,
         "no-undef": 1,
         "no-undefined": 1,
-        "no-unused-vars": 1,
+        "no-unused-vars": 2,
 
 
-        ### 代码格式 ###
+        // 代码格式
         "array-bracket-spacing": [1, "never"],
         "block-spacing": [1, "never"],
         "brace-style": [1, "1tbs", { "allowSingleLine": true }],
@@ -144,7 +147,7 @@
         "spaced-comment": 1,
 
 
-        ### ES6 ###
+        // ES6
         "arrow-parens": 1,
         "arrow-spacing": 1,
         "constructor-super": 2,
@@ -165,10 +168,13 @@
         "template-curly-spacing": 1,
         "yield-star-spacing": 1,
 
-        ### react ###
+        // react
         "react/jsx-uses-vars": 2,
         "react/jsx-indent": 1,
         "react/jsx-no-undef": 2,
+        "react/prop-types": 0,
+        "react/jsx-key": 0,
+        "react/no-find-dom-node": 0,
         "react/jsx-space-before-closing": [1, "always"]
     }
 }

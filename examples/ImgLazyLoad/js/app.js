@@ -3,13 +3,13 @@
  * time   : 2016-10-14
  */
 import {PureComponent} from 'react';
-import {render} from 'react-dom';
+import {findDOMNode, render} from 'react-dom';
 import {ImgLazyLoadWrap, ImgLazyLoad} from '../../../src/components/ImgLazyLoad';
 
 class App extends PureComponent {
     componentDidMount() {
-        const wrap = ReactDOM.findDOMNode(this.refs.ImgLazyLoadWrap),
-            content = this.refs.content;
+        const wrap = findDOMNode(this.ImgLazyLoadWrap),
+            content = this.content;
         let pageY = 0,
             scroll = 0;
 
@@ -23,8 +23,8 @@ class App extends PureComponent {
     }
 
     render() {
-        return <ImgLazyLoadWrap ref="ImgLazyLoadWrap" className="image-lazy-load img-lazy-load-wrap" offsetY="-100" eventType="touchmove">
-            <div ref="content">
+        return <ImgLazyLoadWrap ref={(e) => {this.ImgLazyLoadWrap = e;}} className="image-lazy-load img-lazy-load-wrap" offsetY="-100" eventType="touchmove">
+            <div ref={(e) => {this.content = e;}}>
                 <ImgLazyLoad src="http://img5.imgtn.bdimg.com/it/u=2438757233,2961043306&fm=21&gp=0.jpg" />
                 <ImgLazyLoad src="http://img5.imgtn.bdimg.com/it/u=2438757233,2961043306&fm=21&gp=0.jpg" />
                 <ImgLazyLoad src="http://img5.imgtn.bdimg.com/it/u=2438757233,2961043306&fm=21&gp=0.jpg" />
